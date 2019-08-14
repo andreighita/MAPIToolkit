@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="MAPI">
+      <UniqueIdentifier>{f50b1ec0-d8a0-4ee2-ab90-23fbfef53994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{4c43076e-f3a0-438b-ad0e-2fa6e674ff2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc\ADSI">
+      <UniqueIdentifier>{048c28ca-8e42-4fbc-8f76-10e063259038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc\Utility">
+      <UniqueIdentifier>{b71bf8f6-4816-4e76-b29d-363a117c57cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc\Registry">
+      <UniqueIdentifier>{3db5a8b5-4e52-41ba-b23f-ffa616086a0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc\XML">
+      <UniqueIdentifier>{484c23b9-d286-4e4a-8bad-f37925e04a19}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolkitTypeDefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Profile\AdditionalMailbox.h">
+      <Filter>MAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Profile\CachedMode.h">
+      <Filter>MAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Profile\ExchangeAccount.h">
+      <Filter>MAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Profile\PST.h">
+      <Filter>MAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Profile\Profile.h">
+      <Filter>MAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Profile\LdapAb.h">
+      <Filter>MAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Misc\ADSI\ADHelper.h">
+      <Filter>Misc\ADSI</Filter>
+    </ClInclude>
+    <ClInclude Include="InlineAndMacros.h">
+      <Filter>Misc\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Misc\Utility\StringOperations.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="RegistryHelper.h">
+      <Filter>Misc\Registry</Filter>
+    </ClInclude>
+    <ClInclude Include="Misc\XML\XMLHelper.h">
+      <Filter>Misc\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtraMAPIDefs.h">
+      <Filter>MAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Misc\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Toolkit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Misc\XML\AddressBookXmlParser.h">
+      <Filter>Misc\XML</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Profile\AdditionalMailbox.cpp">
+      <Filter>MAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Profile\CachedMode.cpp">
+      <Filter>MAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Profile\ExchangeAccount.cpp">
+      <Filter>MAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Profile\LdapAb.cpp">
+      <Filter>MAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Profile\Profile.cpp">
+      <Filter>MAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Profile\PST.cpp">
+      <Filter>MAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Misc\ADSI\ADHelper.cpp">
+      <Filter>Misc\ADSI</Filter>
+    </ClCompile>
+    <ClCompile Include="Misc\Utility\StringOperations.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="RegistryHelper.cpp">
+      <Filter>Misc\Registry</Filter>
+    </ClCompile>
+    <ClCompile Include="Misc\XML\XMLHelper.cpp">
+      <Filter>Misc\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Misc\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Toolkit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
