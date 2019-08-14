@@ -1,34 +1,36 @@
 # MAPIToolkit
 
+Allow managing MAPI profile and running MAPI operations against mailobxes. 
+
 ## Help information
 
 **Usage:**
 ```sh
-       [-?]
-       [-action               {addservice, listservice, listallservices, removeservice, removeallservices, updateservice}]
-       [-configfilepath       <string>]
-       [-customsearchbase     <string>]
-       [-defaultsearchbase    {true, false}]
-       [-displayname          <string>]
-       [-enablebrowsing       {true, false}]
-       [-logfilepath          <string>]
-       [-loggingmode          {none, console, file, all, debug}]
-       [-maxentries           <int>]
-       [-newdisplayname       <string>]
-       [-newservername        <string>]
-       [-newserverport        <int>]
-       [-password             <string>]
-       [-profilemode          {default, specific, all}]
-       [-profilename          <string>]
-       [-registry]
-       [-requirespa           {true, false}]
-       [-saveconfig           {true, false}]
-       [-searchtimeout        <int>]
-       [-servername           <string>]
-       [-serverport           <int>]
-       [-servicetype          {addressbook}]
-       [-username             <string>]
-       [-usessl               {true, false}]
+ [-?]
+ [-action               {addservice, listservice, listallservices, removeservice, removeallservices, updateservice}]
+ [-configfilepath       <string>]
+ [-customsearchbase     <string>]
+ [-defaultsearchbase    {true, false}]
+ [-displayname          <string>]
+ [-enablebrowsing       {true, false}]
+ [-logfilepath          <string>]
+ [-loggingmode          {none, console, file, all, debug}]
+ [-maxentries           <int>]
+ [-newdisplayname       <string>]
+ [-newservername        <string>]
+ [-newserverport        <int>]
+ [-password             <string>]
+ [-profilemode          {default, specific, all}]
+ [-profilename          <string>]
+ [-registry]
+ [-requirespa           {true, false}]
+ [-saveconfig           {true, false}]
+ [-searchtimeout        <int>]
+ [-servername           <string>]
+ [-serverport           <int>]
+ [-servicetype          {addressbook}]
+ [-username             <string>]
+ [-usessl               {true, false}]
 ```
 **Options:**
 ```sh
