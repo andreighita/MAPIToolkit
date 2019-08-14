@@ -1,6 +1,6 @@
 # MAPIToolkit
 
-# Help information
+## Help information
 
 Usage:
        [-?]
@@ -55,10 +55,12 @@ Options:
  -username            : The Username to use for authenticating in the form of domain\username, UPN or just the username if domain name not applicable or not required. Leave blank if a username and password are not required.
  -usessl              : "true" if a SSL connection is required.The default value is "false".
   
-# Listing specific Address Book services
+## Listing specific Address Book services
 
-Example 1: 
+**Example 1:** 
 MAPIToolkitConsole.exe -action listservice -servicetype addressbook -servername ldap.contoso.com
+
+
 2019.8.14 11:50:42 INFO Action listservice will run against 1 services
 2019.8.14 11:50:42 INFO   Display Name        : Contoso
 2019.8.14 11:50:42 INFO   Ldap Server Name    : ldap.contoso.com
@@ -91,7 +93,7 @@ MAPIToolkitConsole.exe -action listservice -servicetype addressbook -displayname
 2019.8.14 11:51:7 SUCCESS Address book service succesfully listed
 2019.8.14 11:51:7 SUCCESS Action succesfully run on profile: microsoft
 
-# Listing all Address Book services
+## Listing all Address Book services
 
 Example 1: 
 MAPIToolkitConsole.exe -action listallservices -servicetype addressbook
@@ -110,7 +112,7 @@ MAPIToolkitConsole.exe -action listallservices -servicetype addressbook
 2019.8.14 11:48:34 SUCCESS Address book services succesfully listed
 2019.8.14 11:48:34 SUCCESS Action succesfully run on profile: microsoft
 
-# Updating existing Address Book services
+## Updating existing Address Book services
 
 Example 1: 
 MAPIToolkitConsole.exe -action updateservice -servername ldap.contoso.com -newdisplayname "Contoso" -servicetype addressbook
@@ -130,7 +132,7 @@ MAPIToolkitConsole.exe -action updateservice -newdisplayname ldap.contoso.com -r
 2019.8.14 14:37:48 SUCCESS Address book service succesfully updated
 2019.8.14 14:37:48 SUCCESS Action succesfully run on profile: microsoft
 
-# Adding new Address Book services
+## Adding new Address Book services
 
 Example 1: 
 MapiToolkitConsole.exe -action addservice -servicetype addressbook -displayname Fabrikam -servername ldap.fabrikam.com -serverport 636
@@ -152,7 +154,7 @@ MAPIToolkitConsole.exe -action addservice -servicetype addressbook -configfilepa
 2019.8.14 13:42:59 SUCCESS Address book service succesfully added
 2019.8.14 13:42:59 SUCCESS Action succesfully run on profile: microsoft
 
-# Removing specific Address Book services                                                             
+## Removing specific Address Book services                                                             
 
 Example 1: 
 MAPIToolkitConsole.exe -action removeservice -servername ldap.fabrikam.com -servicetype addressbook
@@ -166,7 +168,7 @@ MAPIToolkitConsole.exe -action removeservice -displayname Fabrikam -servicetype 
 2019.8.14 12:50:9 SUCCESS Address book service succesfully removed
 2019.8.14 12:50:9 SUCCESS Action succesfully run on profile: microsoft
 
-# Removing all Address Book services 
+## Removing all Address Book services 
 
 Example 1:
 MAPIToolkitConsole.exe -action removeallservices -servicetype addressbook
@@ -174,7 +176,7 @@ MAPIToolkitConsole.exe -action removeallservices -servicetype addressbook
 2019.8.14 12:51:29 INFO Number of services found: 2
 2019.8.14 12:51:29 SUCCESS Action succesfully run on profile: microsoft
 
-# Sample configuration XML file
+## Sample configuration XML file
 
 <?xml version="1.0"?>
 <ABConfiguration>
