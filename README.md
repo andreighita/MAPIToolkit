@@ -2,7 +2,8 @@
 
 ## Help information
 
-Usage:
+**Usage:**
+```sh
        [-?]
        [-action               {addservice, listservice, listallservices, removeservice, removeallservices, updateservice}]
        [-configfilepath       <string>]
@@ -28,7 +29,9 @@ Usage:
        [-servicetype          {addressbook}]
        [-username             <string>]
        [-usessl               {true, false}]
-Options:
+```
+**Options:**
+```sh
  -?                   : Displays the help info.
  -action              : Action(s) to perform.
  -configfilepath      : Path to the input configuration file.
@@ -54,13 +57,17 @@ Options:
  -servicetype         : Indicates the type of service to run the action against.
  -username            : The Username to use for authenticating in the form of domain\username, UPN or just the username if domain name not applicable or not required. Leave blank if a username and password are not required.
  -usessl              : "true" if a SSL connection is required.The default value is "false".
-  
+ ```
+ 
 ## Listing specific Address Book services
 
-**Example 1:** 
+### Example 1: 
+**Syntax** 
+```sh
 MAPIToolkitConsole.exe -action listservice -servicetype addressbook -servername ldap.contoso.com
-
-
+```
+**Sample Output**
+```sh
 2019.8.14 11:50:42 INFO Action listservice will run against 1 services
 2019.8.14 11:50:42 INFO   Display Name        : Contoso
 2019.8.14 11:50:42 INFO   Ldap Server Name    : ldap.contoso.com
@@ -75,9 +82,15 @@ MAPIToolkitConsole.exe -action listservice -servicetype addressbook -servername 
 2019.8.14 11:50:42 INFO   Default search base : true
 2019.8.14 11:50:42 SUCCESS Address book service succesfully listed
 2019.8.14 11:50:42 SUCCESS Action succesfully run on profile: microsoft
+```
 
-Example 2:
+### Example 2: 
+**Syntax** 
+```sh
 MAPIToolkitConsole.exe -action listservice -servicetype addressbook -displayname Contoso
+```
+**Sample Output**
+```sh
 2019.8.14 11:51:7 INFO Action listservice will run against 1 services
 2019.8.14 11:51:7 INFO   Display Name        : Contoso
 2019.8.14 11:51:7 INFO   Ldap Server Name    : ldap.contoso.com
@@ -92,11 +105,17 @@ MAPIToolkitConsole.exe -action listservice -servicetype addressbook -displayname
 2019.8.14 11:51:7 INFO   Default search base : true
 2019.8.14 11:51:7 SUCCESS Address book service succesfully listed
 2019.8.14 11:51:7 SUCCESS Action succesfully run on profile: microsoft
+```
 
 ## Listing all Address Book services
 
-Example 1: 
+### Example 1: 
+**Syntax** 
+```sh
 MAPIToolkitConsole.exe -action listallservices -servicetype addressbook
+```
+**Sample Output**
+```sh
 2019.8.14 11:48:33 INFO   Listing entry #0
 2019.8.14 11:48:33 INFO   Display Name        : ldap.contoso.com
 2019.8.14 11:48:33 INFO   Ldap Server Name    : ldap.contoso.com
@@ -111,73 +130,128 @@ MAPIToolkitConsole.exe -action listallservices -servicetype addressbook
 2019.8.14 11:48:34 INFO   Default search base : true
 2019.8.14 11:48:34 SUCCESS Address book services succesfully listed
 2019.8.14 11:48:34 SUCCESS Action succesfully run on profile: microsoft
+```
 
 ## Updating existing Address Book services
 
-Example 1: 
+### Example 1: 
+**Syntax**
+```sh
 MAPIToolkitConsole.exe -action updateservice -servername ldap.contoso.com -newdisplayname "Contoso" -servicetype addressbook
+```
+**Sample Output**
+```sh
 2019.8.14 11:49:54 INFO Action updateservice will run against 1 services
 2019.8.14 11:49:54 SUCCESS Address book service succesfully updated
 2019.8.14 11:49:54 SUCCESS Action succesfully run on profile: microsoft
+```
 
-Example 2: 
+### Example 2: 
+**Syntax**
+```sh
 MAPIToolkitConsole.exe -action updateservice -displayname Fabrikam -newserverport 389 -servicetype addressbook
+```
+**Sample Output**
+```sh
 2019.8.14 11:55:14 INFO Action updateservice will run against 1 services
 2019.8.14 11:55:14 SUCCESS Address book service succesfully updated
 2019.8.14 11:55:14 SUCCESS Action succesfully run on profile: microsoft
-
-Example 3: 
+```
+### Example 3: 
+**Syntax**
+```sh
 MAPIToolkitConsole.exe -action updateservice -newdisplayname ldap.contoso.com -registry -saveconfig true
+```
+**Sample Output**
+```sh
 2019.8.14 14:37:48 INFO Action updateservice will run against 1 services
 2019.8.14 14:37:48 SUCCESS Address book service succesfully updated
 2019.8.14 14:37:48 SUCCESS Action succesfully run on profile: microsoft
+```
 
 ## Adding new Address Book services
 
-Example 1: 
+### Example 1: 
+**Syntax**
+```sh
 MapiToolkitConsole.exe -action addservice -servicetype addressbook -displayname Fabrikam -servername ldap.fabrikam.com -serverport 636
+```
+**Sample Output**
+```sh
 2019.8.14 11:52:29 SUCCESS Address book service succesfully added 
 2019.8.14 11:52:29 SUCCESS Action succesfully run on profile: microsoft
-
-Example 2:
+```
+### Example 2:
+**Syntax**
+```sh
 MAPIToolkitConsole.exe -action addservice -servicetype addressbook -displayname tailspintoys.com -servername ldap.tailspintoys.com
+```
+**Sample Output**
+```sh
 2019.8.14 11:54:4 SUCCESS Address book service succesfully added 
 2019.8.14 11:54:4 SUCCESS Action succesfully run on profile: microsoft
-
-Example 3: 
+```
+### Example 3: 
+**Syntax**
+```sh
 MAPIToolkitConsole.exe -action addservice -servicetype addressbook -configfilepath C:\Temp\Configuration.xml
+```
+**Sample Output**
+```sh
 2019.8.14 13:40:19 SUCCESS Address book service succesfully added
 2019.8.14 13:40:19 SUCCESS Action succesfully run on profile: microsoft
-
-Example 4:
+```
+### Example 4:
+**Syntax**
+```sh
 MAPIToolkitConsole.exe -action addservice -servicetype addressbook -configfilepath C:\Temp\Configuration.xml -saveconfig true
+```
+**Sample Output**
+```sh
 2019.8.14 13:42:59 SUCCESS Address book service succesfully added
 2019.8.14 13:42:59 SUCCESS Action succesfully run on profile: microsoft
-
+```
 ## Removing specific Address Book services                                                             
 
-Example 1: 
+### Example 1: 
+**Syntax**
+```sh
 MAPIToolkitConsole.exe -action removeservice -servername ldap.fabrikam.com -servicetype addressbook
+```
+**Sample Output**
+```sh
 2019.8.14 12:22:50 INFO Action removeservice will run against 1 services
 2019.8.14 12:22:50 SUCCESS Address book service succesfully removed
 2019.8.14 12:22:50 SUCCESS Action succesfully run on profile: microsoft
-
-Example 2: 
+```
+### Example 2: 
+**Syntax**
+```sh
 MAPIToolkitConsole.exe -action removeservice -displayname Fabrikam -servicetype addressbook
+```
+**Sample Output**
+```sh
 2019.8.14 12:50:9 INFO Action removeservice will run against 1 services
 2019.8.14 12:50:9 SUCCESS Address book service succesfully removed
 2019.8.14 12:50:9 SUCCESS Action succesfully run on profile: microsoft
+```
 
 ## Removing all Address Book services 
 
-Example 1:
+### Example 1:
+**Syntax**
+```sh
 MAPIToolkitConsole.exe -action removeallservices -servicetype addressbook
+```
+**Sample Output**
+```sh
 2019.8.14 12:51:29 INFO Action removeallservices will run against 2 services
 2019.8.14 12:51:29 INFO Number of services found: 2
 2019.8.14 12:51:29 SUCCESS Action succesfully run on profile: microsoft
+```
 
 ## Sample configuration XML file
-
+```sh
 <?xml version="1.0"?>
 <ABConfiguration>
     <!--DisplayName-->
@@ -217,3 +291,4 @@ MAPIToolkitConsole.exe -action removeallservices -servicetype addressbook
     <!--Indicates whether browsing the AB contens is supported. -->
     <EnableBrowsing>False</EnableBrowsing>
 </ABConfiguration>
+```
