@@ -294,3 +294,39 @@ MAPIToolkitConsole.exe -action removeallservices -servicetype addressbook
     <EnableBrowsing>False</EnableBrowsing>
 </ABConfiguration>
 ```
+
+## Information about this sample
+
+MAPIToolkit uses Extended MAPI to access and manage the Outlook (MAPI) profile configuration. 
+
+If running with the **-saveconfig true** switch, the tool writes the configuration settings under *HKEY_CURRENT_USER\SOFTWARE\Microsoft Ltd\MAPIToolkit*. Address book specific configuration is stored under *HKEY_CURRENT_USER\SOFTWARE\Microsoft Ltd\MAPIToolkit\AddressBook*.
+
+For example:
+```s
+MAPIToolkitConsole.exe -action addservice -displayname ldap.contoso.com -saveconfig true
+```
+
+If you wish to reuse the previous configuraiton and only edit a single parameter or a small number of parameters, you can use the **-registry** switch which will read the previously saved configuration and specify any overrides to the saved configuration. If you wish for the overrides to be saved to the registry you will have to use **-saveconfig true** again. 
+
+For example:
+```s
+MAPIToolkitConsole.exe -action addservice -newdisplayname Contoso -registry -saveconfig true
+```
+
+The sample also uses some default values to fill in any gaps in the service configuration. These defaults are as follows:
+```s
+loggingmode:       console
+profilemode:       default
+saveconfig:        false
+serverport:        389
+usessl:            false
+requirespa:        false
+searchtimeout:     60
+maxentries:        100
+defaultsearchbase: true
+enablebrowsing:    false
+```
+
+## Disclaimer
+
+This is a code sample maintained by myself alone. If you run into any problems please log the issues here on github. Please do not raise any support cases with Microsoft Customer Service and Support as Microsoft has no obligation to provide support for this sample, nor will it. 
