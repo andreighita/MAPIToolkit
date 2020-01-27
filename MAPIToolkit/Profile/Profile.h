@@ -93,4 +93,11 @@ namespace MAPIToolkit
 #pragma endregion
 
 	HRESULT CreateService(LPSERVICEADMIN2 lpSvcAdmin2, LPMAPIUID lpuidService);
+
+	STDMETHODIMP CopySBinary(
+		LPSBinary psbDest,
+		const LPSBinary psbSrc,
+		LPVOID pParent);
+
+	HRESULT HrSetABSearchOrder(WCHAR* wszABName, LPTSTR lpszProfileName);
 }

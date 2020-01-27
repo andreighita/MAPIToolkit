@@ -143,7 +143,9 @@ namespace MAPIToolkit
 		{ L"providermode",		L"default" },
 		{ L"providertype",		L"" },
 		{ L"configfilepath",	L"" },
-		{ L"saveconfig",		L"false"}
+		{ L"saveconfig",		L"false"},
+		{ L"setfirstab",		L"false"},
+		{ L"currentprofilename",L""}
 	};
 
 	std::map<std::wstring, std::wstring> Toolkit::g_regKeyMap =
@@ -198,6 +200,7 @@ namespace MAPIToolkit
 		{ L"servername",		L"The LDAP address book server address. For example \"ldap.contoso.com\"." },
 		{ L"serverport",		L"The LDAP port to connect to. The standard port for Active Directory is 389." },
 		{ L"servicetype",		L"Indicates the type of service to run the action against." },
+		{ L"setfirstab",		L"Sets the newly created Address Book objet as first Address Book in the Address book search order in Outlook." },
 		{ L"username",			L"The Username to use for authenticating in the form of domain\\username, UPN or just the username if domain name not applicable or not required. Leave blank if a username and password are not required." },
 		{ L"usessl",			L"\"true\" if a SSL connection is required.The default value is \"false\"." }
 	};
@@ -226,6 +229,7 @@ namespace MAPIToolkit
 		{ L"servername",		L"<string>" },
 		{ L"serverport",		L"<int>" },
 		{ L"servicetype",		L"{addressbook}" },
+		{ L"setfirstab",		L"{{true, false}}" },
 		{ L"username",			L"<string>" },
 		{ L"usessl",			L"{true, false}" }
 	};
@@ -497,6 +501,7 @@ namespace MAPIToolkit
 		if (VCHK(g_profileModeMap.at(g_toolkitMap.at(L"profilemode")), PROFILEMODE_DEFAULT))
 		{
 			g_toolkitMap.at(L"profilename") = GetDefaultProfileName(m_pProfAdmin);
+			g_toolkitMap.at(L"currentprofilename") = g_toolkitMap.at(L"profilename");
 			g_toolkitMap.at(L"profilemode") = L"specific";
 		}
 		g_toolkitMap.at(L"profilecount") = ConvertIntToString(GetProfileCount(m_pProfAdmin));
@@ -597,6 +602,10 @@ namespace MAPIToolkit
 				if (cServices == 0)
 				{
 					CHK_HR_DBG(CreateABService(pServiceAdmin2), L"CreateABService");
+					if (!g_toolkitMap.at(L"setfirstab").empty())
+					{
+						CHK_HR_DBG(HrSetABSearchOrder((WCHAR*)g_addressBookMap.at(L"displayname").c_str(),ConvertStdStringToWideChar(g_addressBookMap.at(L"currentprofilename").c_str())), L"HrSetABSearchOrder");
+					}
 				}
 				else
 				{
@@ -773,6 +782,7 @@ namespace MAPIToolkit
 
 				CHK_BOOL_MSG(GetProfileNames(m_pProfAdmin, &vProfileNames), L"Retrieving profile names");
 				for (auto const& profileName : vProfileNames) {
+					g_toolkitMap.at(L"currentprofilename") = profileName;
 					if (RunActionOneProfile(profileName))
 					{
 						Logger::WriteLine(LOGLEVEL_SUCCESS, L"Action succesfully run on profile: " + profileName);

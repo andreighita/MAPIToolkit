@@ -528,119 +528,119 @@ CleanUp:
 }
 
 // Outlook 2016
-HRESULT HrCloneProfile(ProfileInfo * profileInfo)
-{
-	HRESULT hRes = S_OK;
-	LPSERVICEADMIN2 lpServiceAdmin = NULL;
-	unsigned int uiServiceIndex = 0;
-	profileInfo->wszProfileName = profileInfo->wszProfileName + L"_Clone";
-	Logger::Write(LOGLEVEL_INFO, L"Creating new profile named: " + profileInfo->wszProfileName);
-	CHK_HR_DBG(HrCreateProfile((LPWSTR)profileInfo->wszProfileName.c_str(), &lpServiceAdmin), L"Calling HrCreateProfile.");
-	if (lpServiceAdmin)
-	{
-		for (unsigned int i = 0; i < profileInfo->ulServiceCount; i++)
-		{
-			MAPIUID uidService = { 0 };
-			LPMAPIUID lpServiceUid = &uidService;
-			if (profileInfo->profileServices[i].serviceType == SERVICETYPE_EXCHANGEACCOUNT)
-			{
-				Logger::Write(LOGLEVEL_INFO, L"Adding exchange mailbox: " + profileInfo->profileServices[i].exchangeAccountInfo->wszEmailAddress);
-				CHK_HR_DBG(HrCreateMsemsServiceModernExt(false, // sort this out later
-					(LPWSTR)profileInfo->wszProfileName.c_str(),
-					profileInfo->profileServices[i].ulResourceFlags,
-					profileInfo->profileServices[i].exchangeAccountInfo->ulProfileConfigFlags,
-					profileInfo->profileServices[i].exchangeAccountInfo->iCachedModeMonths,
-					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszEmailAddress.c_str(),
-					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszDisplayName.c_str()), L"Calling HrCreateMsemsServiceModernExt.");
+//HRESULT HrCloneProfile(ProfileInfo * profileInfo)
+//{
+//	HRESULT hRes = S_OK;
+//	LPSERVICEADMIN2 lpServiceAdmin = NULL;
+//	unsigned int uiServiceIndex = 0;
+//	profileInfo->wszProfileName = profileInfo->wszProfileName + L"_Clone";
+//	Logger::Write(LOGLEVEL_INFO, L"Creating new profile named: " + profileInfo->wszProfileName);
+//	CHK_HR_DBG(HrCreateProfile((LPWSTR)profileInfo->wszProfileName.c_str(), &lpServiceAdmin), L"Calling HrCreateProfile.");
+//	if (lpServiceAdmin)
+//	{
+//		for (unsigned int i = 0; i < profileInfo->ulServiceCount; i++)
+//		{
+//			MAPIUID uidService = { 0 };
+//			LPMAPIUID lpServiceUid = &uidService;
+//			if (profileInfo->profileServices[i].serviceType == SERVICETYPE_EXCHANGEACCOUNT)
+//			{
+//				Logger::Write(LOGLEVEL_INFO, L"Adding exchange mailbox: " + profileInfo->profileServices[i].exchangeAccountInfo->wszEmailAddress);
+//				CHK_HR_DBG(HrCreateMsemsServiceModernExt(false, // sort this out later
+//					(LPWSTR)profileInfo->wszProfileName.c_str(),
+//					profileInfo->profileServices[i].ulResourceFlags,
+//					profileInfo->profileServices[i].exchangeAccountInfo->ulProfileConfigFlags,
+//					profileInfo->profileServices[i].exchangeAccountInfo->iCachedModeMonths,
+//					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszEmailAddress.c_str(),
+//					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszDisplayName.c_str()), L"Calling HrCreateMsemsServiceModernExt.");
+//
+//				MAPIUID uidService = { 0 };
+//				memcpy((LPVOID)&uidService, lpServiceUid, sizeof(MAPIUID));
+//				for (unsigned int j = 0; j < profileInfo->profileServices[i].exchangeAccountInfo->ulMailboxCount; j++)
+//				{
+//					if (profileInfo->profileServices[i].exchangeAccountInfo->accountMailboxes[j].ulProfileType == PROFILE_DELEGATE)
+//					{
+//						Logger::Write(LOGLEVEL_INFO, L"Adding additional mailbox: " + profileInfo->profileServices[i].exchangeAccountInfo->accountMailboxes[j].wszSmtpAddress);
+//						// this should not add online archives
+//						if (TRUE != profileInfo->profileServices[i].exchangeAccountInfo->accountMailboxes[j].bIsOnlineArchive)
+//							CHK_HR_DBG(HrAddDelegateMailboxModern(false,
+//							(LPWSTR)profileInfo->wszProfileName.c_str(),
+//								FALSE,
+//								uiServiceIndex,
+//								(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->accountMailboxes[j].wszDisplayName.c_str(),
+//								(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->accountMailboxes[j].wszSmtpAddress.c_str()), L"Calling HrAddDelegateMailboxModern.");
+//					}
+//				}
+//				uiServiceIndex++;
+//			}
+//			else if (profileInfo->profileServices[i].serviceType == SERVICETYPE_DATAFILE)
+//			{
+//				Logger::Write(LOGLEVEL_INFO, L"Adding PST file: " + profileInfo->profileServices[i].pstInfo->wszPstPath);
+//				CHK_HR_DBG(HrCreatePstService(lpServiceAdmin,
+//					&lpServiceUid,
+//					(LPWSTR)profileInfo->profileServices[i].wszServiceName.c_str(),
+//					profileInfo->profileServices[i].ulResourceFlags,
+//					profileInfo->profileServices[i].pstInfo->ulPstConfigFlags,
+//					(LPWSTR)profileInfo->profileServices[i].pstInfo->wszPstPath.c_str(),
+//					(LPWSTR)profileInfo->profileServices[i].pstInfo->wszDisplayName.c_str()), L"Calling HrCreatePstService.");
+//				uiServiceIndex++;
+//			}
+//
+//		}
+//
+//		Logger::Write(LOGLEVEL_INFO, L"Setting profile as default.");
+//		CHK_HR_DBG(HrSetDefaultProfile((LPWSTR)profileInfo->wszProfileName.c_str()), L"Calling HrSetDefaultProfile.");
+//	}
+//
+//Error:
+//	goto CleanUp;
+//CleanUp:
+//	return hRes;
+//}
 
-				MAPIUID uidService = { 0 };
-				memcpy((LPVOID)&uidService, lpServiceUid, sizeof(MAPIUID));
-				for (unsigned int j = 0; j < profileInfo->profileServices[i].exchangeAccountInfo->ulMailboxCount; j++)
-				{
-					if (profileInfo->profileServices[i].exchangeAccountInfo->accountMailboxes[j].ulProfileType == PROFILE_DELEGATE)
-					{
-						Logger::Write(LOGLEVEL_INFO, L"Adding additional mailbox: " + profileInfo->profileServices[i].exchangeAccountInfo->accountMailboxes[j].wszSmtpAddress);
-						// this should not add online archives
-						if (TRUE != profileInfo->profileServices[i].exchangeAccountInfo->accountMailboxes[j].bIsOnlineArchive)
-							CHK_HR_DBG(HrAddDelegateMailboxModern(false,
-							(LPWSTR)profileInfo->wszProfileName.c_str(),
-								FALSE,
-								uiServiceIndex,
-								(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->accountMailboxes[j].wszDisplayName.c_str(),
-								(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->accountMailboxes[j].wszSmtpAddress.c_str()), L"Calling HrAddDelegateMailboxModern.");
-					}
-				}
-				uiServiceIndex++;
-			}
-			else if (profileInfo->profileServices[i].serviceType == SERVICETYPE_DATAFILE)
-			{
-				Logger::Write(LOGLEVEL_INFO, L"Adding PST file: " + profileInfo->profileServices[i].pstInfo->wszPstPath);
-				CHK_HR_DBG(HrCreatePstService(lpServiceAdmin,
-					&lpServiceUid,
-					(LPWSTR)profileInfo->profileServices[i].wszServiceName.c_str(),
-					profileInfo->profileServices[i].ulResourceFlags,
-					profileInfo->profileServices[i].pstInfo->ulPstConfigFlags,
-					(LPWSTR)profileInfo->profileServices[i].pstInfo->wszPstPath.c_str(),
-					(LPWSTR)profileInfo->profileServices[i].pstInfo->wszDisplayName.c_str()), L"Calling HrCreatePstService.");
-				uiServiceIndex++;
-			}
-
-		}
-
-		Logger::Write(LOGLEVEL_INFO, L"Setting profile as default.");
-		CHK_HR_DBG(HrSetDefaultProfile((LPWSTR)profileInfo->wszProfileName.c_str()), L"Calling HrSetDefaultProfile.");
-	}
-
-Error:
-	goto CleanUp;
-CleanUp:
-	return hRes;
-}
-
-// Outlook 2013
-HRESULT HrSimpleCloneProfile(ProfileInfo * profileInfo, bool bSetDefaultProfile)
-{
-	HRESULT hRes = S_OK;
-	LPSERVICEADMIN2 lpServiceAdmin = NULL;
-	unsigned int uiServiceIndex = 0;
-	profileInfo->wszProfileName = profileInfo->wszProfileName + L"_Clone";
-	Logger::Write(LOGLEVEL_INFO, L"Creating new profile named: " + profileInfo->wszProfileName);
-	CHK_HR_DBG(HrCreateProfile((LPWSTR)profileInfo->wszProfileName.c_str(), &lpServiceAdmin), L"Calling HrCreateProfile.");
-	if (lpServiceAdmin)
-	{
-		for (unsigned int i = 0; i < profileInfo->ulServiceCount; i++)
-		{
-			MAPIUID uidService = { 0 };
-			LPMAPIUID lpServiceUid = &uidService;
-			if (profileInfo->profileServices[i].serviceType == SERVICETYPE_EXCHANGEACCOUNT)
-			{
-				Logger::Write(LOGLEVEL_INFO, L"Adding exchange mailbox: " + profileInfo->profileServices[i].exchangeAccountInfo->wszEmailAddress);
-				
-				CHK_HR_DBG(HrCreateMsemsServiceMOH(false,
-					(LPWSTR)profileInfo->wszProfileName.c_str(),
-					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszEmailAddress.c_str(),
-					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszMailboxDN.c_str(),
-					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszHomeServerDN.c_str(),
-					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszHomeServerName.c_str(),
-					NULL,
-					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszMailStoreExternalUrl.c_str(),
-					NULL,
-					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszAddressBookExternalUrl.c_str()), L"HrCreateMsemsServiceMOH");
-
-				uiServiceIndex++;
-			}
-		}
-		if (bSetDefaultProfile)
-		{
-			Logger::Write(LOGLEVEL_INFO, L"Setting profile as default.");
-			CHK_HR_DBG(HrSetDefaultProfile((LPWSTR)profileInfo->wszProfileName.c_str()), L"Calling HrSetDefaultProfile.");
-		}
-	}
-Error:
-	goto CleanUp;
-CleanUp:
-	return hRes;
-}
+//// Outlook 2013
+//HRESULT HrSimpleCloneProfile(ProfileInfo * profileInfo, bool bSetDefaultProfile)
+//{
+//	HRESULT hRes = S_OK;
+//	LPSERVICEADMIN2 lpServiceAdmin = NULL;
+//	unsigned int uiServiceIndex = 0;
+//	profileInfo->wszProfileName = profileInfo->wszProfileName + L"_Clone";
+//	Logger::Write(LOGLEVEL_INFO, L"Creating new profile named: " + profileInfo->wszProfileName);
+//	CHK_HR_DBG(HrCreateProfile((LPWSTR)profileInfo->wszProfileName.c_str(), &lpServiceAdmin), L"Calling HrCreateProfile.");
+//	if (lpServiceAdmin)
+//	{
+//		for (unsigned int i = 0; i < profileInfo->ulServiceCount; i++)
+//		{
+//			MAPIUID uidService = { 0 };
+//			LPMAPIUID lpServiceUid = &uidService;
+//			if (profileInfo->profileServices[i].serviceType == SERVICETYPE_EXCHANGEACCOUNT)
+//			{
+//				Logger::Write(LOGLEVEL_INFO, L"Adding exchange mailbox: " + profileInfo->profileServices[i].exchangeAccountInfo->wszEmailAddress);
+//				
+//				CHK_HR_DBG(HrCreateMsemsServiceMOH(false,
+//					(LPWSTR)profileInfo->wszProfileName.c_str(),
+//					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszEmailAddress.c_str(),
+//					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszMailboxDN.c_str(),
+//					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszHomeServerDN.c_str(),
+//					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszHomeServerName.c_str(),
+//					NULL,
+//					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszMailStoreExternalUrl.c_str(),
+//					NULL,
+//					(LPWSTR)profileInfo->profileServices[i].exchangeAccountInfo->wszAddressBookExternalUrl.c_str()), L"HrCreateMsemsServiceMOH");
+//
+//				uiServiceIndex++;
+//			}
+//		}
+//		if (bSetDefaultProfile)
+//		{
+//			Logger::Write(LOGLEVEL_INFO, L"Setting profile as default.");
+//			CHK_HR_DBG(HrSetDefaultProfile((LPWSTR)profileInfo->wszProfileName.c_str()), L"Calling HrSetDefaultProfile.");
+//		}
+//	}
+//Error:
+//	goto CleanUp;
+//CleanUp:
+//	return hRes;
+//}
 
 VOID PrintProfile(ProfileInfo * profileInfo)
 {
@@ -1965,6 +1965,181 @@ HRESULT CreateABService(LPSERVICEADMIN2 lpSvcAdmin2)
 	CHK_HR_DBG(lpSvcAdmin2->ConfigureMsgService(lpuidService, NULL, 0, (ULONG)rgvalVector.size(), rgvalVector.data()), L"Configuring the address book service with the new properties");
 
 Error:
+	return hRes;
+}
+
+STDMETHODIMP CopySBinary(
+	LPSBinary psbDest,
+	const LPSBinary psbSrc,
+	LPVOID pParent)
+{
+	HRESULT     hRes = S_OK;
+	psbDest->cb = psbSrc->cb;
+
+	if (psbSrc->cb) {
+		if (pParent)
+			hRes = MAPIAllocateMore(
+				psbSrc->cb,
+				pParent,
+				(LPVOID*)&psbDest->lpb);
+		else
+			hRes = MAPIAllocateBuffer(
+				psbSrc->cb,
+				(LPVOID*)&psbDest->lpb);
+
+		if (!FAILED(hRes))
+			CopyMemory(psbDest->lpb, psbSrc->lpb, psbSrc->cb);
+	}
+
+	return hRes;
+}
+
+HRESULT HrSetABSearchOrder(WCHAR* wszABName, LPTSTR lpszProfileName)
+{
+	// MAPI address book and session variables 
+	HRESULT       hRes = S_OK;            // Result code returned from MAPI calls. 
+	LPMAPISESSION lpSession = NULL;   // Pointer to MAPI session. 
+	LPADRBOOK     lpAddrBook = NULL;  // Pointer to Address Book. 
+	//Number of address lists to resolve against 
+	const int numANR = 1;
+	WCHAR* ANROrder[numANR] = { wszABName };
+	UINT  numContainersFound[numANR] = { 0 };
+
+	// Temporary structure to allocate buffer in MAPI. This will be used as a parent buffer to free space later. 
+	LPVOID tempLink = NULL;
+	// Counters 
+	ULONG         i = 0;                  // Index counter 
+	ULONG         j = 0;                  // Index counter 
+
+	// Used for querying hierarchy 
+	ULONG                                   ulObjType = 0L;      // Object type returned by MAPI 
+	LPMAPICONTAINER     pIABRoot = NULL;     // Root address book container 
+	LPMAPITABLE              pHTable = NULL;      // Holds hierarchy table 
+	LPSRowSet        pRows = NULL;        // Pointer to row set. Stores AB Address Lists 
+
+	// Used for setting search path 
+	LPSRowSet     pNewRows = NULL;        // Pointer to new row set 
+	SizedSRowSet(numANR, NewRows);      // New row set 
+	SPropValue    sProps[numANR] = { 0 };   // Property tag structure 
+
+	// Structures contaning MAPI Column Sets required for querying tables 
+	enum {
+		abPR_ENTRYID,
+		abPR_DISPLAY_NAME_W,
+		abNUM_COLS
+	};
+
+	static SizedSPropTagArray(abNUM_COLS, abCols) = {
+		abNUM_COLS,
+		PR_ENTRYID,
+		PR_DISPLAY_NAME_W,
+	};
+
+	// Log on to MAPI and allow user to choose profile 
+
+	// Note: This uses the current MAPI session if there is one 
+	CHK_HR_DBG(MAPILogonEx(NULL, lpszProfileName, NULL, 0, &lpSession), L"MAPILogonEx");
+
+	// Open the Address Book 
+	CHK_HR_DBG(lpSession->OpenAddressBook(NULL, NULL, NULL, &lpAddrBook), L"OpenAddressBook");
+
+	// Open the Address Book Root container 
+	CHK_HR_DBG(lpAddrBook->OpenEntry(
+		0L,
+		NULL,
+		NULL,
+		0L,
+		&ulObjType,
+		(LPUNKNOWN*)&pIABRoot), L"OpenEntry");
+
+	// Intentionally allocate 0 bytes. This is used for buffer management. 
+	MAPIAllocateBuffer(0L, &tempLink);
+
+	// Make sure there is a Container object 
+	// Query hierarchy for containers 
+	if (MAPI_ABCONT == ulObjType) {
+		// - Call IMAPIContainer::GetHierarchyTable to open the Hierarchy 
+		//   table of the root address book container 
+		CHK_HR_DBG(pIABRoot->GetHierarchyTable(CONVENIENT_DEPTH | MAPI_UNICODE,
+			&pHTable), L"GetHierarchyTable");
+
+		// Get the list of address book containers first 
+		CHK_HR_DBG(HrQueryAllRows(
+			pHTable,
+			(LPSPropTagArray)&abCols,
+			NULL,
+			NULL,
+			0L,
+			&pRows), L"HrQueryAllRows");
+
+		// Initialize the structures to set the search order 
+		ZeroMemory(&NewRows, numANR * sizeof(SRow));
+		pNewRows = (LPSRowSet)&NewRows;
+
+		// Set the number of rows you are going to set 
+		pNewRows->cRows = numANR;
+
+		// Set the pointers to the structures 
+		for (i = 0; i < numANR; i++)
+			pNewRows->aRow[i].lpProps = &sProps[i];
+
+		// Compare the list to the ones that of interest 
+		for (i = 0; i < pRows->cRows; i++) {
+			if (pRows->aRow[i].lpProps[abPR_DISPLAY_NAME_W].ulPropTag == PR_DISPLAY_NAME_W) {
+				LPWSTR containerName = pRows->aRow[i].lpProps[abPR_DISPLAY_NAME_W].Value.lpszW;
+				for (j = 0; j < numANR; j++)
+					if (!wcscmp(containerName, ANROrder[j])) {
+						// First check if a container with this name has been found already 
+						if (numContainersFound[j] == 0) {
+							numContainersFound[j]++;
+							pNewRows->aRow[j].cValues = 1;
+
+							// The property being passing is PR_ENTRY_ID 
+							pNewRows->aRow[j].lpProps[0].ulPropTag = PR_ENTRYID;
+
+							// Copy the binary data over 
+							if (FAILED(hRes = CopySBinary(
+								&pNewRows->aRow[j].lpProps[0].Value.bin,
+								&pRows->aRow[i].lpProps[abPR_ENTRYID].Value.bin,
+								tempLink))) {
+								printf("Fatal Error:Failed to copy entry IDs\n");
+								goto Cleanup;
+							}
+						}
+						// More than 1 container matched the same name 
+						else {
+							wprintf(L"Fatal Error: Duplicate container found, container name = %s\n", containerName);
+							goto Cleanup;
+						}
+					}
+			}
+		}
+
+		// Only set the search path if all the rows have been found 
+		// Check the array for any entries that were blank 
+		for (i = 0; i < numANR; i++)
+			if (numContainersFound[i] == 0) {
+				printf("Fatal Error: all containers were not found\n");
+				goto Cleanup;
+			}
+
+		// Everything is safe to set the search path now 
+		CHK_HR_DBG(lpAddrBook->SetSearchPath(0, pNewRows), L"SetSearchPath");
+		
+	}
+Error: 
+	goto Cleanup;
+
+Cleanup:
+	MAPIFreeBuffer(tempLink);
+	UlRelease(pHTable);
+	FreeProws(pRows);
+	UlRelease(pIABRoot);
+	UlRelease(lpAddrBook);
+
+	// Log off from MAPI 
+	CHK_HR_DBG( lpSession->Logoff(NULL, NULL, 0), L"Logoff");
+	UlRelease(lpSession);
 	return hRes;
 }
 
