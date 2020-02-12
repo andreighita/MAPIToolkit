@@ -7,7 +7,7 @@
 #include "Toolkit.h"
 
 using namespace MAPIToolkit;
-#pragma comment (lib, "MAPIToolkit.lib")
+#pragma comment (lib, "C:\\Users\\anixi\\Documents\\GitHub\\MAPIToolkit\\x64\\Debug\\MAPIToolkit.lib")
 
 int wmain(int argc, wchar_t* argv[])
 {

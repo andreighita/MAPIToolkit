@@ -237,6 +237,8 @@ namespace MAPIToolkit
 	ULONG Toolkit::m_action;
 	LPPROFADMIN Toolkit::m_pProfAdmin;
 	BOOL Toolkit::m_registry = FALSE;
+	LPMAPISESSION Toolkit::m_lpMapiSession = NULL;
+	BOOL Toolkit::m_bLoggedOn = FALSE;
 
 	// Is64BitProcess
 // Returns true if 64 bit process or false if 32 bit.
@@ -506,6 +508,8 @@ namespace MAPIToolkit
 		}
 		g_toolkitMap.at(L"profilecount") = ConvertIntToString(GetProfileCount(m_pProfAdmin));
 
+		MAPIAllocateBuffer(sizeof(LPMAPISESSION), (LPVOID*)&m_lpMapiSession);
+		ZeroMemory(m_lpMapiSession, sizeof(LPMAPISESSION));
 
 	Error:
 		goto CleanUp;
@@ -516,6 +520,7 @@ namespace MAPIToolkit
 	VOID Toolkit::Uninitialise()
 	{
 		if (m_pProfAdmin) m_pProfAdmin->Release();
+		if (m_lpMapiSession) HrLogoff(m_lpMapiSession);
 		MAPIUninitialize();
 		CoUninitialize();
 	}
@@ -560,6 +565,38 @@ namespace MAPIToolkit
 			DisplayUsage();
 
 		Uninitialise();
+	}
+
+	VOID Toolkit::CustomRun()
+	{
+		HRESULT hRes = S_OK;
+		m_pProfAdmin = NULL;
+		LPSRowSet     pNewRows = NULL;
+		MAPIINIT_0  MAPIINIT = { 0, MAPI_MULTITHREAD_NOTIFICATIONS };
+		CHK_HR_DBG(CoInitialize(NULL), L"CoInitialize");
+		CHK_HR_DBG(MAPIInitialize(&MAPIINIT), L"MAPIInitialize");
+		CHK_HR_DBG(MAPIAdminProfiles(0, &m_pProfAdmin), L"MAPIAdminProfiles");
+		g_toolkitMap.at(L"profilename") = GetDefaultProfileName(m_pProfAdmin);
+		g_toolkitMap.at(L"currentprofilename") = g_toolkitMap.at(L"profilename");
+		g_toolkitMap.at(L"profilemode") = L"specific";
+
+		MAPIAllocateBuffer(sizeof(LPMAPISESSION), (LPVOID*)& m_lpMapiSession);
+		ZeroMemory(m_lpMapiSession, sizeof(LPMAPISESSION));
+
+		CHK_HR_DBG(MAPILogonEx(NULL, (LPTSTR)g_toolkitMap.at(L"currentprofilename").c_str(), NULL, 0, &m_lpMapiSession), L"MAPILogonEx");
+		
+		
+		MAPIAllocateBuffer(sizeof(LPSRowSet), (LPVOID*)& pNewRows);
+		ZeroMemory(pNewRows, sizeof(LPSRowSet));
+		HrGetABSearchOrder(m_lpMapiSession, &pNewRows);
+
+	Error:
+		goto Cleanup;
+	Cleanup:
+		if (m_pProfAdmin) m_pProfAdmin->Release();
+		if (m_lpMapiSession) HrLogoff(m_lpMapiSession);
+		MAPIUninitialize();
+		CoUninitialize();
 	}
 
 	VOID Toolkit::AddService(LPSERVICEADMIN2 pServiceAdmin)
@@ -747,6 +784,16 @@ namespace MAPIToolkit
 		}
 	}
 
+	BOOL Toolkit::GetLoggedOn()
+	{
+		return m_bLoggedOn;
+	}
+
+	VOID Toolkit::SetLoggedOn(BOOL bLoggedOn)
+	{
+		m_bLoggedOn = bLoggedOn;
+	}
+
 	void Toolkit::RunAction()
 	{
 		HRESULT hRes = S_OK;
@@ -783,6 +830,7 @@ namespace MAPIToolkit
 				CHK_BOOL_MSG(GetProfileNames(m_pProfAdmin, &vProfileNames), L"Retrieving profile names");
 				for (auto const& profileName : vProfileNames) {
 					g_toolkitMap.at(L"currentprofilename") = profileName;
+					//CHK_HR_DBG(HrLogon((LPTSTR)g_toolkitMap.at(L"currentprofilename").c_str(), &m_lpMapiSession), L"HrLogon");
 					if (RunActionOneProfile(profileName))
 					{
 						Logger::WriteLine(LOGLEVEL_SUCCESS, L"Action succesfully run on profile: " + profileName);
@@ -794,6 +842,7 @@ namespace MAPIToolkit
 				}
 				break;
 			case PROFILEMODE_SPECIFIC:
+				//CHK_HR_DBG(HrLogon((LPTSTR)g_toolkitMap.at(L"profilename").c_str(), &m_lpMapiSession), L"HrLogon");
 				if (RunActionOneProfile(g_toolkitMap.at(L"profilename")))
 				{
 					Logger::WriteLine(LOGLEVEL_SUCCESS, L"Action succesfully run on profile: " + g_toolkitMap.at(L"profilename"));

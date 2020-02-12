@@ -1860,12 +1860,27 @@ HRESULT CreateABService(LPSERVICEADMIN2 lpSvcAdmin2)
 	DATA_BLOB			dataBlobOut = { 0 };
 	MAPIUID				uidService = { 0 };
 	LPMAPIUID			lpuidService = &uidService;
+	LPADRBOOK     lpAddrBook = NULL;  // Pointer to Address Book. 
+	LPSRowSet        lpRows = NULL;        // Pointer to row set. Stores AB Address Lists 
+
+
 
 	LPWSTR lpszwPassword = (LPWSTR)Toolkit::g_addressBookMap.at(L"password").c_str();
 	LPTSTR lpszServiceName = (LPTSTR)Toolkit::g_addressBookMap.at(L"servicename").c_str();
 	LPTSTR lpszDisplayName = (LPTSTR)Toolkit::g_addressBookMap.at(L"displayname").c_str();
 	std::vector<SPropValue> rgvalVector;
 	SPropValue sPropValue;
+
+	LPMAPISESSION lpMapiSession = NULL;
+	CHK_HR_DBG(MAPILogonEx(NULL, (LPTSTR)Toolkit::g_toolkitMap.at(L"currentprofilename").c_str(), NULL, 0, &lpMapiSession), L"MAPILogonEx");
+
+	// Open the Address Book 
+	CHK_HR_DBG(lpMapiSession->OpenAddressBook(NULL, NULL, NULL, &lpAddrBook), L"OpenAddressBook");
+
+	if (lpAddrBook != NULL)
+	{
+		CHK_HR_DBG(lpAddrBook->GetSearchPath(0, &lpRows), L"GetSearchPath");
+	}
 
 	// Adds a message service to the current profile and returns that newly added service UID.
 	CHK_HR_DBG(lpSvcAdmin2->CreateMsgServiceEx((LPTSTR)ConvertWideCharToMultiByte((LPWSTR)Toolkit::g_addressBookMap.at(L"servicename").c_str()), (LPTSTR)ConvertWideCharToMultiByte((LPWSTR)Toolkit::g_addressBookMap.at(L"displayname").c_str()), NULL, 0, &uidService), L"Creating address book service" + Toolkit::g_addressBookMap.at(L"displayname"));
@@ -1964,7 +1979,158 @@ HRESULT CreateABService(LPSERVICEADMIN2 lpSvcAdmin2)
 	// Reconfigures a message service with the new props.
 	CHK_HR_DBG(lpSvcAdmin2->ConfigureMsgService(lpuidService, NULL, 0, (ULONG)rgvalVector.size(), rgvalVector.data()), L"Configuring the address book service with the new properties");
 
+	CHK_HR_DBG(lpAddrBook->SetSearchPath(0, lpRows), L"SetSearchPath");
+	CHK_HR_DBG(lpMapiSession->Logoff(NULL, NULL, 0), L"Logoff");
+
+
 Error:
+	goto Cleanup;
+Cleanup:
+	if (lpRows) FreeProws(lpRows);
+	if (lpAddrBook) lpAddrBook->Release();
+	if (lpMapiSession) lpMapiSession->Release();
+	return hRes;
+}
+
+HRESULT CreateABServiceAndSetSearchOrder(LPSERVICEADMIN2 lpSvcAdmin2)
+{
+	HRESULT				hRes = S_OK;
+	LPMAPITABLE			lpMsgSvcTable = NULL;		// MAPI table pointer.
+	LPSRowSet			lpSvcRows = NULL;		// Row set pointer.
+	SPropValue			rgval[12];						// Property value structure to hold configuration info.
+	DATA_BLOB			dataBlobIn = { 0 };
+	DATA_BLOB			dataBlobOut = { 0 };
+	MAPIUID				uidService = { 0 };
+	LPMAPIUID			lpuidService = &uidService;
+	LPADRBOOK     lpAddrBook = NULL;  // Pointer to Address Book. 
+	LPSRowSet        lpRows = NULL;        // Pointer to row set. Stores AB Address Lists 
+
+
+
+	LPWSTR lpszwPassword = (LPWSTR)Toolkit::g_addressBookMap.at(L"password").c_str();
+	LPTSTR lpszServiceName = (LPTSTR)Toolkit::g_addressBookMap.at(L"servicename").c_str();
+	LPTSTR lpszDisplayName = (LPTSTR)Toolkit::g_addressBookMap.at(L"displayname").c_str();
+	std::vector<SPropValue> rgvalVector;
+	SPropValue sPropValue;
+
+	LPMAPISESSION lpMapiSession = NULL;
+	CHK_HR_DBG(MAPILogonEx(NULL, (LPTSTR)Toolkit::g_toolkitMap.at(L"currentprofilename").c_str(), NULL, 0, &lpMapiSession), L"MAPILogonEx");
+	
+	// Open the Address Book 
+	CHK_HR_DBG(lpMapiSession->OpenAddressBook(NULL, NULL, NULL, &lpAddrBook), L"OpenAddressBook");
+
+	if (lpAddrBook != NULL)
+	{
+		CHK_HR_DBG(lpAddrBook->GetSearchPath(0, &lpRows), L"GetSearchPath");
+	}
+
+	// Adds a message service to the current profile and returns that newly added service UID.
+	CHK_HR_DBG(lpSvcAdmin2->CreateMsgServiceEx((LPTSTR)ConvertWideCharToMultiByte((LPWSTR)Toolkit::g_addressBookMap.at(L"servicename").c_str()), (LPTSTR)ConvertWideCharToMultiByte((LPWSTR)Toolkit::g_addressBookMap.at(L"displayname").c_str()), NULL, 0, &uidService), L"Creating address book service" + Toolkit::g_addressBookMap.at(L"displayname"));
+
+	rgvalVector.resize(0);
+
+	ZeroMemory(&sPropValue, sizeof(SPropValue));
+	sPropValue.ulPropTag = PROP_AB_PROVIDER_DISPLAY_NAME;
+	sPropValue.Value.lpszA = ConvertWideCharToMultiByte(Toolkit::g_addressBookMap.at(L"displayname").c_str());
+	rgvalVector.push_back(sPropValue);
+
+	ZeroMemory(&sPropValue, sizeof(SPropValue));
+	sPropValue.ulPropTag = PROP_AB_PROVIDER_SERVER_NAME;
+	sPropValue.Value.lpszA = ConvertWideCharToMultiByte(Toolkit::g_addressBookMap.at(L"servername").c_str());
+	rgvalVector.push_back(sPropValue);
+
+	ZeroMemory(&sPropValue, sizeof(SPropValue));
+	sPropValue.ulPropTag = PROP_AB_PROVIDER_SERVER_PORT;
+	sPropValue.Value.lpszA = ConvertWideCharToMultiByte(Toolkit::g_addressBookMap.at(L"serverport").c_str());
+	rgvalVector.push_back(sPropValue);
+
+	if (0 < wcslen(Toolkit::g_addressBookMap.at(L"username").c_str()))
+	{
+		ZeroMemory(&sPropValue, sizeof(SPropValue));
+		sPropValue.ulPropTag = PROP_AB_PROVIDER_USER_NAME;
+		sPropValue.Value.lpszA = ConvertWideCharToMultiByte(Toolkit::g_addressBookMap.at(L"username").c_str());
+		rgvalVector.push_back(sPropValue);
+	}
+
+	ZeroMemory(&sPropValue, sizeof(SPropValue));
+	sPropValue.ulPropTag = PROP_AB_PROVIDER_SEARCH_BASE;
+	sPropValue.Value.lpszA = ConvertWideCharToMultiByte(Toolkit::g_addressBookMap.at(L"customsearchbase").c_str());
+	rgvalVector.push_back(sPropValue);
+
+	ZeroMemory(&sPropValue, sizeof(SPropValue));
+	sPropValue.ulPropTag = PROP_AB_PROVIDER_SEARCH_TIMEOUT;
+	sPropValue.Value.lpszA = ConvertWideCharToMultiByte(Toolkit::g_addressBookMap.at(L"searchtimeout").c_str());
+	rgvalVector.push_back(sPropValue);
+
+	ZeroMemory(&sPropValue, sizeof(SPropValue));
+	sPropValue.ulPropTag = PROP_AB_PROVIDER_MAX_ENTRIES;
+	sPropValue.Value.lpszA = ConvertWideCharToMultiByte(Toolkit::g_addressBookMap.at(L"maxentries").c_str());
+	rgvalVector.push_back(sPropValue);
+
+	ZeroMemory(&sPropValue, sizeof(SPropValue));
+	sPropValue.ulPropTag = PROP_AB_PROVIDER_USE_SSL;
+	sPropValue.Value.b = (0 == wcscmp(Toolkit::g_addressBookMap.at(L"usessl").c_str(), L"true"));
+	rgvalVector.push_back(sPropValue);
+
+	ZeroMemory(&sPropValue, sizeof(SPropValue));
+	sPropValue.ulPropTag = PROP_AB_PROVIDER_SERVER_SPA;
+	sPropValue.Value.b = (0 == wcscmp(Toolkit::g_addressBookMap.at(L"requirespa").c_str(), L"true"));
+	rgvalVector.push_back(sPropValue);
+
+	// Encrypt the password if supplied
+	if (0 < wcslen(lpszwPassword))
+	{
+		LPBYTE pbData = (LPBYTE)lpszwPassword;
+		DWORD cbData = (wcslen(lpszwPassword) + 1) * sizeof(WCHAR);
+
+		dataBlobIn.pbData = pbData;
+		dataBlobIn.cbData = cbData;
+
+		if (!CryptProtectData(
+			&dataBlobIn,
+			L"",						// desc
+			NULL,						// optional
+			NULL,						// reserver
+			NULL,						// prompt struct
+			0,							// flags
+			&dataBlobOut))
+		{
+			wprintf(L"CryptProtectData failed!\n");
+			hRes = E_FAIL;
+			goto Error;
+		}
+		ZeroMemory(&sPropValue, sizeof(SPropValue));
+		sPropValue.ulPropTag = PROP_AB_PROVIDER_USER_PASSWORD_ENCODED;
+		sPropValue.Value.bin.cb = dataBlobOut.cbData;
+		sPropValue.Value.bin.lpb = dataBlobOut.pbData;
+		rgvalVector.push_back(sPropValue);
+	}
+
+
+
+	ZeroMemory(&sPropValue, sizeof(SPropValue));
+	sPropValue.ulPropTag = PROP_AB_PROVIDER_ENABLE_BROWSING;
+	sPropValue.Value.b = (0 == wcscmp(Toolkit::g_addressBookMap.at(L"enablebrowsing").c_str(), L"true"));
+	rgvalVector.push_back(sPropValue);
+
+	ZeroMemory(&sPropValue, sizeof(SPropValue));
+	sPropValue.ulPropTag = PROP_AB_PROVIDER_SEARCH_BASE_DEFAULT;
+	sPropValue.Value.ul = (0 == wcscmp(Toolkit::g_addressBookMap.at(L"defaultsearchbase").c_str(), L"true"));
+	rgvalVector.push_back(sPropValue);
+
+	// Reconfigures a message service with the new props.
+	CHK_HR_DBG(lpSvcAdmin2->ConfigureMsgService(lpuidService, NULL, 0, (ULONG)rgvalVector.size(), rgvalVector.data()), L"Configuring the address book service with the new properties");
+
+	CHK_HR_DBG(lpAddrBook->SetSearchPath(0, lpRows), L"SetSearchPath");
+	CHK_HR_DBG(lpMapiSession->Logoff(NULL, NULL, 0), L"Logoff");
+
+
+Error:
+	goto Cleanup;
+Cleanup:
+	if (lpRows) FreeProws(lpRows);
+	if (lpAddrBook) lpAddrBook->Release();
+	if (lpMapiSession) lpMapiSession->Release();
 	return hRes;
 }
 
@@ -2140,6 +2306,73 @@ Cleanup:
 	// Log off from MAPI 
 	CHK_HR_DBG( lpSession->Logoff(NULL, NULL, 0), L"Logoff");
 	UlRelease(lpSession);
+	return hRes;
+}
+
+HRESULT HrGetABSearchOrder(LPMAPISESSION lpSession, LPSRowSet * lppRows)
+{
+	// MAPI address book and session variables 
+	HRESULT       hRes = S_OK;            // Result code returned from MAPI calls. 
+	LPADRBOOK     lpAddrBook = NULL;  // Pointer to Address Book. 
+	LPSRowSet        pRows = NULL;        // Pointer to row set. Stores AB Address Lists 
+
+	// Open the Address Book 
+	CHK_HR_DBG(lpSession->OpenAddressBook(NULL, NULL, NULL, &lpAddrBook), L"OpenAddressBook");
+
+	if (lpAddrBook != NULL)
+	{
+		CHK_HR_DBG(lpAddrBook->GetSearchPath(0, &pRows), L"GetSearchPath");
+
+		if (pRows != NULL)
+			lppRows = &pRows;
+	}
+
+Error:
+	goto Cleanup;
+
+Cleanup:
+	FreeProws(pRows);
+	UlRelease(lpAddrBook);
+	return hRes;
+}
+
+HRESULT HrLogon(LPTSTR lpszProfileName, LPMAPISESSION * lppSession)
+{
+	HRESULT hRes = S_OK;
+	LPMAPISESSION lpSession = NULL;
+		// Note: This uses the current MAPI session if there is one 
+	if ((Toolkit::GetLoggedOn()))
+	{
+		HrLogoff(lppSession[0]);
+	}
+
+	CHK_HR_DBG(MAPILogonEx(NULL, lpszProfileName, NULL, 0, &lpSession), L"MAPILogonEx");
+	lppSession = &lpSession;
+	Toolkit::SetLoggedOn(TRUE);
+
+Error:
+	goto Cleanup;
+
+Cleanup:
+	return hRes;
+}
+
+HRESULT HrLogoff(LPMAPISESSION lpSession)
+{
+	HRESULT hRes = S_OK;
+		// Note: This uses the current MAPI session if there is one 
+	if ((Toolkit::GetLoggedOn) && lpSession)
+	{
+		lpSession->Logoff(0, 0, 0);
+		lpSession->Release();
+		Toolkit::SetLoggedOn(FALSE);
+	}
+
+Error:
+	goto Cleanup;
+
+Cleanup:
+	if (lpSession) lpSession->Release();
 	return hRes;
 }
 

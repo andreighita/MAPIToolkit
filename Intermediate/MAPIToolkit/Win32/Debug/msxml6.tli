@@ -1,9 +1,9 @@
-﻿// Created by Microsoft (R) C/C++ Compiler Version 14.24.28315.0 (53897c80).
+﻿// Created by Microsoft (R) C/C++ Compiler Version 14.22.27905.0 (46631a0a).
 //
-// C:\Users\catagh\source\repos\MAPIToolkit\Intermediate\MAPIToolkit\Win32\Debug\msxml6.tli
+// C:\Users\anixi\Documents\GitHub\MAPIToolkit\Intermediate\MAPIToolkit\Win32\Debug\msxml6.tli
 //
 // Wrapper implementations for Win32 type library msxml6.dll
-// compiler-generated file created 01/27/20 at 15:51:30 - DO NOT EDIT!
+// compiler-generated file created 02/12/20 at 10:00:45 - DO NOT EDIT!
 
 #pragma once
 

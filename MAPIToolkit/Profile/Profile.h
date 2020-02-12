@@ -100,4 +100,8 @@ namespace MAPIToolkit
 		LPVOID pParent);
 
 	HRESULT HrSetABSearchOrder(WCHAR* wszABName, LPTSTR lpszProfileName);
+	HRESULT HrGetABSearchOrder(LPMAPISESSION lpSession, LPSRowSet* lppRows);
+
+	HRESULT HrLogon(LPTSTR lpszProfileName, LPMAPISESSION * lppSession);
+	HRESULT HrLogoff(LPMAPISESSION lpSession);
 }

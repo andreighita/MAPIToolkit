@@ -45,6 +45,9 @@ namespace MAPIToolkit
 		static LPPROFADMIN m_pProfAdmin;
 		//static ULONG m_serviceType; // pm
 		static BOOL m_registry;
+		static LPMAPISESSION m_lpMapiSession;
+		static BOOL m_bLoggedOn;
+
 	public:
 		static std::map<std::wstring, std::wstring> g_addressBookMap;
 		static std::map<std::wstring, std::wstring> g_toolkitMap;
@@ -55,7 +58,9 @@ namespace MAPIToolkit
 		static std::map <std::wstring, std::wstring > g_parameterHelpValues;
 	public:
 		 static VOID Run(int argc, wchar_t* argv[]);
-
+		 static VOID CustomRun();
+		 static BOOL GetLoggedOn();
+		 static VOID SetLoggedOn(BOOL bLoggedOn);
 	private:
 		static BOOL RunActionOneProfile(std::wstring wszProfileName);
 		static BOOL RunActionOneService(LPSERVICEADMIN2 pServiceAdmin, LPMAPIUID pMapiUid);
@@ -79,5 +84,6 @@ namespace MAPIToolkit
 
 		// ACTION_SERVICE_REMOVEALL
 		static VOID RemoveAllServices(LPSERVICEADMIN2 pServiceAdmin);
+
 	};
 }
