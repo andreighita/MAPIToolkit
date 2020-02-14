@@ -4,10 +4,10 @@
 
 #include <iostream>
 #include <tchar.h>
-#include "Toolkit.h"
+#include "C:\Users\catagh2013\source\repos\MAPIToolkit\MAPIToolkit\Toolkit.h"
 
 using namespace MAPIToolkit;
-#pragma comment (lib, "C:\\Users\\anixi\\Documents\\GitHub\\MAPIToolkit\\x64\\Debug\\MAPIToolkit.lib")
+#pragma comment (lib, "MAPIToolkit.lib")
 
 int wmain(int argc, wchar_t* argv[])
 {

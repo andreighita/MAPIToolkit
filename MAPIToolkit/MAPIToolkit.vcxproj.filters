@@ -78,11 +78,11 @@
     <ClInclude Include="Logger.h">
       <Filter>Misc\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Toolkit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Misc\XML\AddressBookXmlParser.h">
       <Filter>Misc\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="Toolkit.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

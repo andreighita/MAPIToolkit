@@ -45,7 +45,7 @@ namespace MAPIToolkit
 		static LPPROFADMIN m_pProfAdmin;
 		//static ULONG m_serviceType; // pm
 		static BOOL m_registry;
-		static LPMAPISESSION m_lpMapiSession;
+		static BOOL m_preserveCase;
 		static BOOL m_bLoggedOn;
 
 	public:

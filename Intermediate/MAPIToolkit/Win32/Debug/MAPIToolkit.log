@@ -1,43 +1,53 @@
-﻿  Toolkit.cpp
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Misc\XML\AddressBookXmlParser.h(35,22): warning C4101:  'e': unreferenced local variable
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Misc\XML\AddressBookXmlParser.h(67,34): warning C4101:  'e': unreferenced local variable
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(269,33): warning C4101:  'e': unreferenced local variable
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(493,33): warning C4101:  'e': unreferenced local variable
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(606,10): warning C4101:  'ulCServices': unreferenced local variable
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(674,6): warning C4002:  too many arguments for function-like macro invocation 'SUCCEEDED'
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(681,7): warning C4002:  too many arguments for function-like macro invocation 'SUCCEEDED'
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(685,24): warning C4018:  '<': signed/unsigned mismatch
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(674,91): warning C4390:  ';': empty controlled statement found; is this the intent?
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(694,7): warning C4102:  'Error': unreferenced label
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(731,7): warning C4002:  too many arguments for function-like macro invocation 'SUCCEEDED'
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(738,8): warning C4002:  too many arguments for function-like macro invocation 'SUCCEEDED'
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(743,25): warning C4018:  '<': signed/unsigned mismatch
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(731,92): warning C4390:  ';': empty controlled statement found; is this the intent?
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(803,5): warning C4805:  '==': unsafe mix of type 'bool' and type 'BOOL' in operation
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(870,25): warning C4018:  '<': signed/unsigned mismatch
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(908,26): warning C4018:  '<': signed/unsigned mismatch
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(946,26): warning C4018:  '<': signed/unsigned mismatch
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(1190,7): warning C4102:  'Error': unreferenced label
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(1138,34): warning C4101:  'e': unreferenced local variable
+﻿  Logger.cpp
+  Toolkit.cpp
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\misc\xml\addressbookxmlparser.h(16): warning C4192: automatically excluding 'ISequentialStream' while importing type library 'msxml6.dll'
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\misc\xml\addressbookxmlparser.h(16): warning C4192: automatically excluding '_FILETIME' while importing type library 'msxml6.dll'
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\misc\xml\addressbookxmlparser.h(35): warning C4101: 'e': unreferenced local variable
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\misc\xml\addressbookxmlparser.h(67): warning C4101: 'e': unreferenced local variable
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(274): warning C4101: 'e': unreferenced local variable
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(498): warning C4101: 'e': unreferenced local variable
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(635): warning C4101: 'ulCServices': unreferenced local variable
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(645): warning C4101: 'e': unreferenced local variable
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(718): warning C4002: too many arguments for function-like macro invocation 'SUCCEEDED'
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(725): warning C4002: too many arguments for function-like macro invocation 'SUCCEEDED'
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(729): warning C4018: '<': signed/unsigned mismatch
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(718): warning C4390: ';': empty controlled statement found; is this the intent?
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(738): warning C4102: 'Error': unreferenced label
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(775): warning C4002: too many arguments for function-like macro invocation 'SUCCEEDED'
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(782): warning C4002: too many arguments for function-like macro invocation 'SUCCEEDED'
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(787): warning C4018: '<': signed/unsigned mismatch
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(775): warning C4390: ';': empty controlled statement found; is this the intent?
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(847): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(914): warning C4018: '<': signed/unsigned mismatch
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(952): warning C4018: '<': signed/unsigned mismatch
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(990): warning C4018: '<': signed/unsigned mismatch
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(1253): warning C4102: 'Error': unreferenced label
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(1201): warning C4101: 'e': unreferenced local variable
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\toolkit.cpp(1241): warning C4101: 'e': unreferenced local variable
+  ADHelper.cpp
   StringOperations.cpp
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Toolkit.cpp(1178,34): warning C4101:  'e': unreferenced local variable
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Misc\Utility\StringOperations.cpp(7,10): warning C4067:  unexpected tokens following preprocessor directive - expected a newline
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\misc\utility\stringoperations.cpp(7): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\misc\utility\stringoperations.cpp(217): warning C4101: 'chr': unreferenced local variable
+  XMLHelper.cpp
+  AdditionalMailbox.cpp
   CachedMode.cpp
+  ExchangeAccount.cpp
+  LdapAb.cpp
   Profile.cpp
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Misc\Utility\StringOperations.cpp(217,11): warning C4101:  'chr': unreferenced local variable
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Profile\Profile.cpp(118,21): warning C4018:  '<': signed/unsigned mismatch
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Profile\Profile.cpp(692,6): warning C4102:  'Error': unreferenced label
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Profile\Profile.cpp(1858,15): warning C4101:  'rgval': unreferenced local variable
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Profile\Profile.cpp(2178,42): warning C4551:  function call missing argument list
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Profile\Profile.cpp(2200,41): warning C4551:  function call missing argument list
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Profile\Profile.cpp(2207,6): warning C4102:  'Error': unreferenced label
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Profile\Profile.cpp(2294,22): warning C4018:  '<': signed/unsigned mismatch
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Profile\Profile.cpp(2362,22): warning C4018:  '<': signed/unsigned mismatch
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Profile\Profile.cpp(2474,22): warning C4018:  '<': signed/unsigned mismatch
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Profile\Profile.cpp(2514,22): warning C4018:  '<': signed/unsigned mismatch
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\profile\profile.cpp(118): warning C4018: '<': signed/unsigned mismatch
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\profile\profile.cpp(692): warning C4102: 'Error': unreferenced label
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\profile\profile.cpp(1858): warning C4101: 'rgval': unreferenced local variable
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\profile\profile.cpp(2000): warning C4101: 'rgval': unreferenced local variable
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\profile\profile.cpp(2279): warning C4018: '<': signed/unsigned mismatch
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\profile\profile.cpp(2451): warning C4551: function call missing argument list
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\profile\profile.cpp(2458): warning C4102: 'Error': unreferenced label
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\profile\profile.cpp(2545): warning C4018: '<': signed/unsigned mismatch
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\profile\profile.cpp(2613): warning C4018: '<': signed/unsigned mismatch
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\profile\profile.cpp(2725): warning C4018: '<': signed/unsigned mismatch
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\profile\profile.cpp(2765): warning C4018: '<': signed/unsigned mismatch
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\profile\profile.cpp(2829): warning C4101: 'rgval': unreferenced local variable
   PST.cpp
   RegistryHelper.cpp
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\Profile\Profile.cpp(2578,15): warning C4101:  'rgval': unreferenced local variable
+c:\users\catagh2013\source\repos\mapitoolkit\mapitoolkit\registryhelper.cpp(362): warning C4101: 'e': unreferenced local variable
   Generating Code...
-C:\Users\anixi\Documents\GitHub\MAPIToolkit\MAPIToolkit\RegistryHelper.cpp(362,35): warning C4101:  'e': unreferenced local variable
-  MAPIToolkit.vcxproj -> C:\Users\anixi\Documents\GitHub\MAPIToolkit\Win32\Debug\MAPIToolkit.lib
+  MAPIToolkit.vcxproj -> C:\Users\catagh2013\Source\Repos\MAPIToolkit\Win32\Debug\MAPIToolkit.lib

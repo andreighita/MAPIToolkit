@@ -1,9 +1,9 @@
-﻿// Created by Microsoft (R) C/C++ Compiler Version 14.22.27905.0 (46631a0a).
+﻿// Created by Microsoft (R) C/C++ Compiler Version 14.16.27035.0 (458f0c33).
 //
-// C:\Users\anixi\Documents\GitHub\MAPIToolkit\Intermediate\MAPIToolkit\Win32\Debug\msxml6.tlh
+// c:\users\catagh2013\source\repos\mapitoolkit\intermediate\mapitoolkit\win32\debug\msxml6.tlh
 //
 // C++ source equivalent of Win32 type library msxml6.dll
-// compiler-generated file created 02/12/20 at 10:00:45 - DO NOT EDIT!
+// compiler-generated file created 02/14/20 at 09:38:21 - DO NOT EDIT!
 
 #pragma once
 #pragma pack(push, 8)
@@ -4512,7 +4512,7 @@ IXMLHTTPRequest2Callback : IUnknown
 // Wrapper method implementations
 //
 
-#include "C:\Users\anixi\Documents\GitHub\MAPIToolkit\Intermediate\MAPIToolkit\Win32\Debug\msxml6.tli"
+#include "c:\users\catagh2013\source\repos\mapitoolkit\intermediate\mapitoolkit\win32\debug\msxml6.tli"
 
 } // namespace MSXML
 

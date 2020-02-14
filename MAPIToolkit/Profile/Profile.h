@@ -99,8 +99,8 @@ namespace MAPIToolkit
 		const LPSBinary psbSrc,
 		LPVOID pParent);
 
-	HRESULT HrSetABSearchOrder(WCHAR* wszABName, LPTSTR lpszProfileName);
-	HRESULT HrGetABSearchOrder(LPMAPISESSION lpSession, LPSRowSet* lppRows);
+	HRESULT HrSetABSearchOrder(WCHAR* wszABName, ULONG ulnumEntries, int searchIndex, LPTSTR lpszProfileName);
+	HRESULT HrGetABSearchOrderRowCount(LPTSTR lpszProfileName, ULONG * ulnumRows);
 
 	HRESULT HrLogon(LPTSTR lpszProfileName, LPMAPISESSION * lppSession);
 	HRESULT HrLogoff(LPMAPISESSION lpSession);

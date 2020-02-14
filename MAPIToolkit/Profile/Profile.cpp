@@ -1872,7 +1872,7 @@ HRESULT CreateABService(LPSERVICEADMIN2 lpSvcAdmin2)
 	SPropValue sPropValue;
 
 	LPMAPISESSION lpMapiSession = NULL;
-	CHK_HR_DBG(MAPILogonEx(NULL, (LPTSTR)Toolkit::g_toolkitMap.at(L"currentprofilename").c_str(), NULL, 0, &lpMapiSession), L"MAPILogonEx");
+	CHK_HR_DBG(MAPILogonEx(NULL, (LPTSTR)Toolkit::g_toolkitMap.at(L"currentprofilename").c_str(), NULL, MAPI_EXTENDED | MAPI_NO_MAIL | MAPI_UNICODE | MAPI_NEW_SESSION, &lpMapiSession), L"MAPILogonEx");
 
 	// Open the Address Book 
 	CHK_HR_DBG(lpMapiSession->OpenAddressBook(NULL, NULL, NULL, &lpAddrBook), L"OpenAddressBook");
@@ -2014,7 +2014,7 @@ HRESULT CreateABServiceAndSetSearchOrder(LPSERVICEADMIN2 lpSvcAdmin2)
 	SPropValue sPropValue;
 
 	LPMAPISESSION lpMapiSession = NULL;
-	CHK_HR_DBG(MAPILogonEx(NULL, (LPTSTR)Toolkit::g_toolkitMap.at(L"currentprofilename").c_str(), NULL, 0, &lpMapiSession), L"MAPILogonEx");
+	CHK_HR_DBG(MAPILogonEx(NULL, (LPTSTR)Toolkit::g_toolkitMap.at(L"currentprofilename").c_str(), NULL, MAPI_EXTENDED | MAPI_NO_MAIL | MAPI_UNICODE | MAPI_NEW_SESSION, &lpMapiSession), L"MAPILogonEx");
 	
 	// Open the Address Book 
 	CHK_HR_DBG(lpMapiSession->OpenAddressBook(NULL, NULL, NULL, &lpAddrBook), L"OpenAddressBook");
@@ -2160,7 +2160,7 @@ STDMETHODIMP CopySBinary(
 	return hRes;
 }
 
-HRESULT HrSetABSearchOrder(WCHAR* wszABName, LPTSTR lpszProfileName)
+HRESULT HrSetABSearchOrder(WCHAR* wszABName, ULONG ulnumEntries, int searchIndex, LPTSTR lpszProfileName)
 {
 	// MAPI address book and session variables 
 	HRESULT       hRes = S_OK;            // Result code returned from MAPI calls. 
@@ -2176,17 +2176,77 @@ HRESULT HrSetABSearchOrder(WCHAR* wszABName, LPTSTR lpszProfileName)
 	// Counters 
 	ULONG         i = 0;                  // Index counter 
 	ULONG         j = 0;                  // Index counter 
+	ULONG         k = 0;                  // Index counter 
 
 	// Used for querying hierarchy 
 	ULONG                                   ulObjType = 0L;      // Object type returned by MAPI 
 	LPMAPICONTAINER     pIABRoot = NULL;     // Root address book container 
 	LPMAPITABLE              pHTable = NULL;      // Holds hierarchy table 
-	LPSRowSet        pRows = NULL;        // Pointer to row set. Stores AB Address Lists 
 
 	// Used for setting search path 
-	LPSRowSet     pNewRows = NULL;        // Pointer to new row set 
-	SizedSRowSet(numANR, NewRows);      // New row set 
-	SPropValue    sProps[numANR] = { 0 };   // Property tag structure 
+	LPSRowSet     lpCurrentRows = NULL;        // Pointer to current search criteria
+	LPSRowSet     lpNewRows = NULL;        // Pointer to current search criteria
+
+	if (ulnumEntries == 1)
+	{
+		SizedSRowSet(1, NewRows) = {};
+		ZeroMemory(&NewRows, 1 * sizeof(SRow));
+		lpNewRows = (LPSRowSet)&NewRows;
+}
+	else if (ulnumEntries == 2)
+	{
+		SizedSRowSet(2, NewRows) = {};
+		ZeroMemory(&NewRows, 2 * sizeof(SRow));
+		lpNewRows = (LPSRowSet)&NewRows;
+	}
+	else if (ulnumEntries == 3)
+	{
+		SizedSRowSet(3, NewRows) = {};
+		ZeroMemory(&NewRows, 3 * sizeof(SRow));
+		lpNewRows = (LPSRowSet)&NewRows;
+	}
+	else if (ulnumEntries == 4)
+	{
+		SizedSRowSet(4, NewRows) = {};
+		ZeroMemory(&NewRows, 4 * sizeof(SRow));
+		lpNewRows = (LPSRowSet)&NewRows;
+	}
+	else if (ulnumEntries == 5)
+	{
+		SizedSRowSet(5, NewRows) = {};
+		ZeroMemory(&NewRows, 5 * sizeof(SRow));
+		lpNewRows = (LPSRowSet)&NewRows;
+	}
+	else if (ulnumEntries == 6)
+	{
+		SizedSRowSet(6, NewRows) = {};
+		ZeroMemory(&NewRows, 6 * sizeof(SRow));
+		lpNewRows = (LPSRowSet)&NewRows;
+	}
+	else if (ulnumEntries == 7)
+	{
+		SizedSRowSet(7, NewRows) = {};
+		ZeroMemory(&NewRows, 7 * sizeof(SRow));
+		lpNewRows = (LPSRowSet)&NewRows;
+	}
+	else if (ulnumEntries == 8)
+	{
+		SizedSRowSet(8, NewRows) = {};
+		ZeroMemory(&NewRows, 8 * sizeof(SRow));
+		lpNewRows = (LPSRowSet)&NewRows;
+	}
+	else if (ulnumEntries == 9)
+	{
+		SizedSRowSet(9, NewRows) = {};
+		ZeroMemory(&NewRows, 9 * sizeof(SRow));
+		lpNewRows = (LPSRowSet)&NewRows;
+	}
+	else if (ulnumEntries == 10)
+	{
+		SizedSRowSet(10, NewRows) = {};
+		ZeroMemory(&NewRows, 10 * sizeof(SRow));
+		lpNewRows = (LPSRowSet)&NewRows;
+	}
 
 	// Structures contaning MAPI Column Sets required for querying tables 
 	enum {
@@ -2204,135 +2264,162 @@ HRESULT HrSetABSearchOrder(WCHAR* wszABName, LPTSTR lpszProfileName)
 	// Log on to MAPI and allow user to choose profile 
 
 	// Note: This uses the current MAPI session if there is one 
-	CHK_HR_DBG(MAPILogonEx(NULL, lpszProfileName, NULL, 0, &lpSession), L"MAPILogonEx");
+	CHK_HR_DBG(MAPILogonEx(NULL, lpszProfileName, NULL, MAPI_EXTENDED | MAPI_NO_MAIL | MAPI_UNICODE | MAPI_NEW_SESSION, &lpSession), L"MAPILogonEx");
 
 	// Open the Address Book 
 	CHK_HR_DBG(lpSession->OpenAddressBook(NULL, NULL, NULL, &lpAddrBook), L"OpenAddressBook");
-
-	// Open the Address Book Root container 
-	CHK_HR_DBG(lpAddrBook->OpenEntry(
-		0L,
-		NULL,
-		NULL,
-		0L,
-		&ulObjType,
-		(LPUNKNOWN*)&pIABRoot), L"OpenEntry");
-
-	// Intentionally allocate 0 bytes. This is used for buffer management. 
-	MAPIAllocateBuffer(0L, &tempLink);
-
-	// Make sure there is a Container object 
-	// Query hierarchy for containers 
-	if (MAPI_ABCONT == ulObjType) {
-		// - Call IMAPIContainer::GetHierarchyTable to open the Hierarchy 
-		//   table of the root address book container 
-		CHK_HR_DBG(pIABRoot->GetHierarchyTable(CONVENIENT_DEPTH | MAPI_UNICODE,
-			&pHTable), L"GetHierarchyTable");
-
-		// Get the list of address book containers first 
-		CHK_HR_DBG(HrQueryAllRows(
-			pHTable,
-			(LPSPropTagArray)&abCols,
-			NULL,
-			NULL,
-			0L,
-			&pRows), L"HrQueryAllRows");
+	CHK_HR_DBG(lpAddrBook->GetSearchPath(0, &lpCurrentRows), L"GetSearchPath");
+	
+	// if only one entry then there's nothing for us to do
+	// so we want a number or rows of at least 2
+	if ((lpCurrentRows) && (lpCurrentRows->cRows > 1))
+	{
+		// we want to make sure the selected searchIndex is not outside the bounds of the existing collection 
+		// so if it's higher than the existing number of rows we'll set it to the last position 
+		if (lpCurrentRows->cRows < searchIndex)
+		{
+			searchIndex = lpCurrentRows->cRows;
+		}
 
 		// Initialize the structures to set the search order 
-		ZeroMemory(&NewRows, numANR * sizeof(SRow));
-		pNewRows = (LPSRowSet)&NewRows;
-
+	
 		// Set the number of rows you are going to set 
-		pNewRows->cRows = numANR;
+		lpNewRows->cRows = lpCurrentRows->cRows;
 
-		// Set the pointers to the structures 
-		for (i = 0; i < numANR; i++)
-			pNewRows->aRow[i].lpProps = &sProps[i];
+		// Set the pointers to new structures 
+		for (i = 0; i < lpCurrentRows->cRows; i++)
+		{
+			SPropValue sProp = { 0 };
+			lpNewRows->aRow[i].cValues = 1;
+			lpNewRows->aRow[i].lpProps = new SPropValue;
+		}
 
-		// Compare the list to the ones that of interest 
-		for (i = 0; i < pRows->cRows; i++) {
-			if (pRows->aRow[i].lpProps[abPR_DISPLAY_NAME_W].ulPropTag == PR_DISPLAY_NAME_W) {
-				LPWSTR containerName = pRows->aRow[i].lpProps[abPR_DISPLAY_NAME_W].Value.lpszW;
-				for (j = 0; j < numANR; j++)
-					if (!wcscmp(containerName, ANROrder[j])) {
-						// First check if a container with this name has been found already 
-						if (numContainersFound[j] == 0) {
-							numContainersFound[j]++;
-							pNewRows->aRow[j].cValues = 1;
 
-							// The property being passing is PR_ENTRY_ID 
-							pNewRows->aRow[j].lpProps[0].ulPropTag = PR_ENTRYID;
+		// Parse the property IDs to find our indexes of interest
+		ULONG ulDisplayNameIndex = 0;
+		ULONG ulEntryID = 0;
+		
+		for (i = 0; i < lpCurrentRows->aRow[0].cValues; i++)
+		{
+			if ((lpCurrentRows->aRow[0].lpProps[i].ulPropTag == PR_DISPLAY_NAME_W) || (lpCurrentRows->aRow[0].lpProps[i].ulPropTag == PR_DISPLAY_NAME_A))
+			{
+				ulDisplayNameIndex = i;
+			}
 
-							// Copy the binary data over 
-							if (FAILED(hRes = CopySBinary(
-								&pNewRows->aRow[j].lpProps[0].Value.bin,
-								&pRows->aRow[i].lpProps[abPR_ENTRYID].Value.bin,
-								tempLink))) {
-								printf("Fatal Error:Failed to copy entry IDs\n");
-								goto Cleanup;
-							}
-						}
-						// More than 1 container matched the same name 
-						else {
-							wprintf(L"Fatal Error: Duplicate container found, container name = %s\n", containerName);
-							goto Cleanup;
-						}
-					}
+			if (lpCurrentRows->aRow[0].lpProps[i].ulPropTag == PR_ENTRYID)
+			{
+				ulEntryID = i;
 			}
 		}
 
-		// Only set the search path if all the rows have been found 
-		// Check the array for any entries that were blank 
-		for (i = 0; i < numANR; i++)
-			if (numContainersFound[i] == 0) {
-				printf("Fatal Error: all containers were not found\n");
-				goto Cleanup;
+		ULONG ulCurrentPosition = 0;
+		// Copy the row of interest first. 
+		for (i = 0; i < lpCurrentRows->cRows; i++)
+		{
+			if (PROP_TYPE(lpCurrentRows->aRow[i].lpProps[ulDisplayNameIndex].ulPropTag) == PT_UNICODE)
+			{
+				LPWSTR containerName = lpCurrentRows->aRow[i].lpProps[ulDisplayNameIndex].Value.lpszW;
+				if (!wcscmp(containerName, wszABName))
+				{
+					lpNewRows->aRow[searchIndex-1].lpProps[0].ulPropTag = PR_ENTRYID;
+					CHK_HR_DBG(CopySBinary(&lpNewRows->aRow[searchIndex-1].lpProps[0].Value.bin,
+						&lpCurrentRows->aRow[i].lpProps[ulEntryID].Value.bin,
+						tempLink), L"CopySBinary");
+					ulCurrentPosition = i;
+					break;
+				}
 			}
+			else
+				if (PROP_TYPE(lpCurrentRows->aRow[i].lpProps[ulDisplayNameIndex].ulPropTag) == PT_STRING8)
+				{
+					LPSTR containerName = lpCurrentRows->aRow[i].lpProps[ulDisplayNameIndex].Value.lpszA;
+					if (!strcmp(containerName, ConvertWideCharToMultiByte(wszABName)))
+					{
+						lpNewRows->aRow[searchIndex-1].lpProps[0].ulPropTag = PR_ENTRYID;
+						CHK_HR_DBG(CopySBinary(&lpNewRows->aRow[searchIndex-1].lpProps[0].Value.bin,
+							&lpCurrentRows->aRow[i].lpProps[ulEntryID].Value.bin,
+							tempLink), L"CopySBinary");
+						ulCurrentPosition = i;
+					}
+				}
+		}
+
+		j = 0;
+		// Copy the remaining rows
+		for (i = 0; i < lpCurrentRows->cRows; i++)
+		{
+			if (i != ulCurrentPosition)
+			{
+				if (j != searchIndex - 1)
+				{
+					lpNewRows->aRow[j].lpProps[0].ulPropTag = PR_ENTRYID;
+					CHK_HR_DBG(CopySBinary(&lpNewRows->aRow[j].lpProps[0].Value.bin,
+						&lpCurrentRows->aRow[i].lpProps[ulEntryID].Value.bin,
+						tempLink), L"CopySBinary");
+				}
+				else
+				{
+					j++;
+					lpNewRows->aRow[j].lpProps[0].ulPropTag = PR_ENTRYID;
+					CHK_HR_DBG(CopySBinary(&lpNewRows->aRow[j].lpProps[0].Value.bin,
+						&lpCurrentRows->aRow[i].lpProps[ulEntryID].Value.bin,
+						tempLink), L"CopySBinary");
+				}
+				j++;
+			}
+			else
+			{
+				i++;
+			}
+		}
+
 
 		// Everything is safe to set the search path now 
-		CHK_HR_DBG(lpAddrBook->SetSearchPath(0, pNewRows), L"SetSearchPath");
-		
-	}
-Error: 
-	goto Cleanup;
-
-Cleanup:
-	MAPIFreeBuffer(tempLink);
-	UlRelease(pHTable);
-	FreeProws(pRows);
-	UlRelease(pIABRoot);
-	UlRelease(lpAddrBook);
-
-	// Log off from MAPI 
-	CHK_HR_DBG( lpSession->Logoff(NULL, NULL, 0), L"Logoff");
-	UlRelease(lpSession);
-	return hRes;
-}
-
-HRESULT HrGetABSearchOrder(LPMAPISESSION lpSession, LPSRowSet * lppRows)
-{
-	// MAPI address book and session variables 
-	HRESULT       hRes = S_OK;            // Result code returned from MAPI calls. 
-	LPADRBOOK     lpAddrBook = NULL;  // Pointer to Address Book. 
-	LPSRowSet        pRows = NULL;        // Pointer to row set. Stores AB Address Lists 
-
-	// Open the Address Book 
-	CHK_HR_DBG(lpSession->OpenAddressBook(NULL, NULL, NULL, &lpAddrBook), L"OpenAddressBook");
-
-	if (lpAddrBook != NULL)
-	{
-		CHK_HR_DBG(lpAddrBook->GetSearchPath(0, &pRows), L"GetSearchPath");
-
-		if (pRows != NULL)
-			lppRows = &pRows;
+		CHK_HR_DBG(lpAddrBook->SetSearchPath(0, lpNewRows), L"SetSearchPath");
 	}
 
 Error:
 	goto Cleanup;
 
 Cleanup:
-	FreeProws(pRows);
+	MAPIFreeBuffer(tempLink);
+	UlRelease(pHTable);
+	FreeProws(lpCurrentRows);
+	FreeProws(lpNewRows);
+	UlRelease(pIABRoot);
 	UlRelease(lpAddrBook);
+
+	// Log off from MAPI 
+	CHK_HR_DBG(lpSession->Logoff(NULL, NULL, 0), L"Logoff");
+	UlRelease(lpSession);
+	return hRes;
+}
+
+HRESULT HrGetABSearchOrderRowCount(LPTSTR lpszProfileName, ULONG * ulnumRows)
+{
+	// MAPI address book and session variables 
+	HRESULT       hRes = S_OK;            // Result code returned from MAPI calls. 
+	LPADRBOOK     lpAddrBook = NULL;  // Pointer to Address Book. 
+	LPSRowSet        lpCurrentRows = NULL;        // Pointer to row set. Stores AB Address Lists 
+	LPMAPISESSION lpSession = NULL;
+	ULONG ulCountRows = 0;
+	// Log on to MAPI and allow user to choose profile 
+
+	// Note: This uses the current MAPI session if there is one 
+	CHK_HR_DBG(MAPILogonEx(NULL, lpszProfileName, NULL, MAPI_EXTENDED | MAPI_NO_MAIL | MAPI_UNICODE | MAPI_NEW_SESSION, &lpSession), L"MAPILogonEx");
+
+	// Open the Address Book 
+	CHK_HR_DBG(lpSession->OpenAddressBook(NULL, NULL, NULL, &lpAddrBook), L"OpenAddressBook");
+	CHK_HR_DBG(lpAddrBook->GetSearchPath(0, &lpCurrentRows), L"GetSearchPath");
+	*ulnumRows = lpCurrentRows->cRows;
+	CHK_HR_DBG(lpSession->Logoff(0, 0, 0), L"Logoff");
+Error:
+	goto Cleanup;
+
+Cleanup:
+	FreeProws(lpCurrentRows);
+	UlRelease(lpAddrBook);
+	UlRelease(lpSession);
 	return hRes;
 }
 
@@ -2346,7 +2433,7 @@ HRESULT HrLogon(LPTSTR lpszProfileName, LPMAPISESSION * lppSession)
 		HrLogoff(lppSession[0]);
 	}
 
-	CHK_HR_DBG(MAPILogonEx(NULL, lpszProfileName, NULL, 0, &lpSession), L"MAPILogonEx");
+	CHK_HR_DBG(MAPILogonEx(NULL, lpszProfileName, NULL, MAPI_EXTENDED | MAPI_NO_MAIL | MAPI_UNICODE | MAPI_NEW_SESSION, &lpSession), L"MAPILogonEx");
 	lppSession = &lpSession;
 	Toolkit::SetLoggedOn(TRUE);
 

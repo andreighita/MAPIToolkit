@@ -107,7 +107,8 @@ namespace MAPIToolkit
 		{ L"enablebrowsing",	L"false" },
 		{ L"newservername",		L"" },
 		{ L"newdisplayname",	L"" },
-		{ L"newserverport",		L"" }
+		{ L"newserverport",		L"" },
+		{ L"setsearchindex",	L"-1"}
 	};
 
 
@@ -144,7 +145,6 @@ namespace MAPIToolkit
 		{ L"providertype",		L"" },
 		{ L"configfilepath",	L"" },
 		{ L"saveconfig",		L"false"},
-		{ L"setfirstab",		L"false"},
 		{ L"currentprofilename",L""}
 	};
 
@@ -184,7 +184,7 @@ namespace MAPIToolkit
 		{ L"customsearchbase",	L"custom search base in case defaultsearchbase is set to false." },
 		{ L"defaultsearchbase",	L"If \"true\" the default search base is to be used. The default value is 'true'." },
 		{ L"displayname",		L"The display name of the service to run the action(s) against."},
-		{ L"enablebrowsing",	L"Indicates whether browsing the address book contens is supported. " },
+		{ L"enablebrowsing",	L"Indicates whether browsing the address book contens is supported. " },	
 		{ L"logfilepath",		L"Path towards the log file where informatin is to be logged." },
 		{ L"loggingmode",		L"Indicates how logging is captured." },
 		{ L"maxentries",		L"The maximum number of results returned by a search in the address book. The default value is 100." },
@@ -192,6 +192,7 @@ namespace MAPIToolkit
 		{ L"newservername",		L"Server name to replace the current server name with in the speciifed service." },
 		{ L"newserverport",		L"Server port to replace the current server port with in the speciifed service." },
 		{ L"password",			L"The password to use for authenticating. This must be a clear text passord. It will be encrypted via CryptoAPI and stored in the address book settings." },
+		{ L"preservecase",		L"Indicates whether the string values passed for service or server names are to be processed as typed, preserving the case instead of transposing the values to lowercase." },
 		{ L"profilemode",		L"Indicates whether to run the action on all profiles or a specific profile." },
 		{ L"profilename",		L"Indicates the name of the profile to run the action against. If left empty, the default profile will be used, unles the profilemode specified is \"all\"."},
 		{ L"requirespa",		L"\"true\" if Secure Password Authentication is required is required. The default value is \"false\"" },
@@ -200,7 +201,7 @@ namespace MAPIToolkit
 		{ L"servername",		L"The LDAP address book server address. For example \"ldap.contoso.com\"." },
 		{ L"serverport",		L"The LDAP port to connect to. The standard port for Active Directory is 389." },
 		{ L"servicetype",		L"Indicates the type of service to run the action against." },
-		{ L"setfirstab",		L"Sets the newly created Address Book objet as first Address Book in the Address book search order in Outlook." },
+		{ L"setsearchindex",	L"Sets the address book search order in Outlook as such as the address book being added is used based on the index specified. For example, for a value of 1, the new address book will be the first one in the search list." },
 		{ L"username",			L"The Username to use for authenticating in the form of domain\\username, UPN or just the username if domain name not applicable or not required. Leave blank if a username and password are not required." },
 		{ L"usessl",			L"\"true\" if a SSL connection is required.The default value is \"false\"." }
 	};
@@ -214,6 +215,7 @@ namespace MAPIToolkit
 		{ L"displayname",		L"<string>"},
 		{ L"enablebrowsing",	L"{true, false}" },
 		{ L"exportpath",		L"<string>" },
+		{ L"forcelowercase",	L"{true, false}" },
 		{ L"logfilepath",		L"<string>" },
 		{ L"loggingmode",		L"{none, console, file, all, debug}" },
 		{ L"maxentries",		L"<int>" },
@@ -221,15 +223,17 @@ namespace MAPIToolkit
 		{ L"newservername",		L"<string>" },
 		{ L"newserverport",		L"<int>" },
 		{ L"password",			L"<string>" },
+		{ L"preservecase",		L"" },
 		{ L"profilemode",		L"{default, specific, all}" },
 		{ L"profilename",		L"<string>"},
+		{ L"registry",			L"" },
 		{ L"requirespa",		L"{true, false}" },
 		{ L"saveconfig",		L"{true, false}"},
 		{ L"searchtimeout",		L"<int>" },
 		{ L"servername",		L"<string>" },
 		{ L"serverport",		L"<int>" },
 		{ L"servicetype",		L"{addressbook}" },
-		{ L"setfirstab",		L"{{true, false}}" },
+		{ L"setsearchindex",	L"{<int>}" },
 		{ L"username",			L"<string>" },
 		{ L"usessl",			L"{true, false}" }
 	};
@@ -237,7 +241,8 @@ namespace MAPIToolkit
 	ULONG Toolkit::m_action;
 	LPPROFADMIN Toolkit::m_pProfAdmin;
 	BOOL Toolkit::m_registry = FALSE;
-	LPMAPISESSION Toolkit::m_lpMapiSession = NULL;
+	BOOL Toolkit::m_preserveCase = FALSE;
+	//LPMAPISESSION Toolkit::m_lpMapiSession = NULL;
 	BOOL Toolkit::m_bLoggedOn = FALSE;
 
 	// Is64BitProcess
@@ -508,8 +513,6 @@ namespace MAPIToolkit
 		}
 		g_toolkitMap.at(L"profilecount") = ConvertIntToString(GetProfileCount(m_pProfAdmin));
 
-		MAPIAllocateBuffer(sizeof(LPMAPISESSION), (LPVOID*)&m_lpMapiSession);
-		ZeroMemory(m_lpMapiSession, sizeof(LPMAPISESSION));
 
 	Error:
 		goto CleanUp;
@@ -520,7 +523,6 @@ namespace MAPIToolkit
 	VOID Toolkit::Uninitialise()
 	{
 		if (m_pProfAdmin) m_pProfAdmin->Release();
-		if (m_lpMapiSession) HrLogoff(m_lpMapiSession);
 		MAPIUninitialize();
 		CoUninitialize();
 	}
@@ -569,34 +571,34 @@ namespace MAPIToolkit
 
 	VOID Toolkit::CustomRun()
 	{
-		HRESULT hRes = S_OK;
-		m_pProfAdmin = NULL;
-		LPSRowSet     pNewRows = NULL;
-		MAPIINIT_0  MAPIINIT = { 0, MAPI_MULTITHREAD_NOTIFICATIONS };
-		CHK_HR_DBG(CoInitialize(NULL), L"CoInitialize");
-		CHK_HR_DBG(MAPIInitialize(&MAPIINIT), L"MAPIInitialize");
-		CHK_HR_DBG(MAPIAdminProfiles(0, &m_pProfAdmin), L"MAPIAdminProfiles");
-		g_toolkitMap.at(L"profilename") = GetDefaultProfileName(m_pProfAdmin);
-		g_toolkitMap.at(L"currentprofilename") = g_toolkitMap.at(L"profilename");
-		g_toolkitMap.at(L"profilemode") = L"specific";
+	//	HRESULT hRes = S_OK;
+	//	m_pProfAdmin = NULL;
+	//	LPSRowSet     pNewRows = NULL;
+	//	MAPIINIT_0  MAPIINIT = { 0, MAPI_MULTITHREAD_NOTIFICATIONS };
+	//	CHK_HR_DBG(CoInitialize(NULL), L"CoInitialize");
+	//	CHK_HR_DBG(MAPIInitialize(&MAPIINIT), L"MAPIInitialize");
+	//	CHK_HR_DBG(MAPIAdminProfiles(0, &m_pProfAdmin), L"MAPIAdminProfiles");
+	//	g_toolkitMap.at(L"profilename") = GetDefaultProfileName(m_pProfAdmin);
+	//	g_toolkitMap.at(L"currentprofilename") = g_toolkitMap.at(L"profilename");
+	//	g_toolkitMap.at(L"profilemode") = L"specific";
 
-		MAPIAllocateBuffer(sizeof(LPMAPISESSION), (LPVOID*)& m_lpMapiSession);
-		ZeroMemory(m_lpMapiSession, sizeof(LPMAPISESSION));
+	//	MAPIAllocateBuffer(sizeof(LPMAPISESSION), (LPVOID*)& m_lpMapiSession);
+	//	ZeroMemory(m_lpMapiSession, sizeof(LPMAPISESSION));
 
-		CHK_HR_DBG(MAPILogonEx(NULL, (LPTSTR)g_toolkitMap.at(L"currentprofilename").c_str(), NULL, 0, &m_lpMapiSession), L"MAPILogonEx");
-		
-		
-		MAPIAllocateBuffer(sizeof(LPSRowSet), (LPVOID*)& pNewRows);
-		ZeroMemory(pNewRows, sizeof(LPSRowSet));
-		HrGetABSearchOrder(m_lpMapiSession, &pNewRows);
+	//	CHK_HR_DBG(MAPILogonEx(NULL, (LPTSTR)g_toolkitMap.at(L"currentprofilename").c_str(), NULL, 0, &m_lpMapiSession), L"MAPILogonEx");
+	//	
+	//	
+	//	MAPIAllocateBuffer(sizeof(LPSRowSet), (LPVOID*)& pNewRows);
+	//	ZeroMemory(pNewRows, sizeof(LPSRowSet));
+	//	HrGetABSearchOrder(m_lpMapiSession, &pNewRows);
 
-	Error:
-		goto Cleanup;
-	Cleanup:
-		if (m_pProfAdmin) m_pProfAdmin->Release();
-		if (m_lpMapiSession) HrLogoff(m_lpMapiSession);
-		MAPIUninitialize();
-		CoUninitialize();
+	//Error:
+	//	goto Cleanup;
+	//Cleanup:
+	//	if (m_pProfAdmin) m_pProfAdmin->Release();
+	//	if (m_lpMapiSession) HrLogoff(m_lpMapiSession);
+	//	MAPIUninitialize();
+	//	CoUninitialize();
 	}
 
 	VOID Toolkit::AddService(LPSERVICEADMIN2 pServiceAdmin)
@@ -634,14 +636,29 @@ namespace MAPIToolkit
 
 			// Get service UID(s) for the services we want to remove	
 			ULONG cServices = 0;
+			int searchOrderIndex = -1;
+
+			try
+			{
+				searchOrderIndex = std::stoi(g_addressBookMap.at(L"setsearchindex"));
+			}
+			catch (int e)
+			{
+
+			}
+
 			if SUCCEEDED(GetABServiceUid(pServiceAdmin2, g_addressBookMap.at(L"displayname").empty() ? NULL : (LPTSTR)g_addressBookMap.at(L"displayname").c_str(), g_addressBookMap.at(L"servername").empty() ? NULL : (LPTSTR)g_addressBookMap.at(L"servername").c_str(), &cServices, NULL))
 			{
 				if (cServices == 0)
 				{
 					CHK_HR_DBG(CreateABService(pServiceAdmin2), L"CreateABService");
-					if (!g_toolkitMap.at(L"setfirstab").empty())
+					if (searchOrderIndex > 0)
 					{
-						CHK_HR_DBG(HrSetABSearchOrder((WCHAR*)g_addressBookMap.at(L"displayname").c_str(),ConvertStdStringToWideChar(g_addressBookMap.at(L"currentprofilename").c_str())), L"HrSetABSearchOrder");
+						ULONG ulNumRows = 0;
+						ULONG * pulNumRows = &ulNumRows;
+
+						CHK_HR_DBG(HrGetABSearchOrderRowCount((LPTSTR)g_toolkitMap.at(L"currentprofilename").c_str(), pulNumRows), L"HrGetABSearchOrderRowCount");
+						CHK_HR_DBG(HrSetABSearchOrder((WCHAR*)g_addressBookMap.at(L"displayname").c_str(), ulNumRows, searchOrderIndex, (LPTSTR)g_toolkitMap.at(L"currentprofilename").c_str()), L"HrSetABSearchOrder");
 					}
 				}
 				else
@@ -1099,6 +1116,25 @@ namespace MAPIToolkit
 	{
 		HRESULT hRes = S_OK;
 
+		// first find out if we need to force lowercase or no
+		for (int i = 1; i < argc; i++)
+		{
+			switch (argv[i][0])
+			{
+			case '-':
+			case '/':
+			case '\\':
+				std::wstring wsArg = SubstringFromStart(1, argv[i]);
+				std::transform(wsArg.begin(), wsArg.end(), wsArg.begin(), ::tolower);
+
+
+				if (wsArg == L"preservecase")
+				{
+					m_preserveCase = TRUE;
+				}
+				break;
+			}
+		}
 
 		// check if we're supposed to list the help menu
 		for (int i = 1; i < argc; i++)
@@ -1189,7 +1225,7 @@ namespace MAPIToolkit
 			case '/':
 			case '\\':
 				std::wstring wsArg = SubstringFromStart(1, argv[i]);
-				std::transform(wsArg.begin(), wsArg.end(), wsArg.begin(), ::tolower);
+				if (m_preserveCase != TRUE) std::transform(wsArg.begin(), wsArg.end(), wsArg.begin(), ::tolower);
 
 				try
 				{
