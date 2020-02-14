@@ -45,7 +45,6 @@ namespace MAPIToolkit
 		static LPPROFADMIN m_pProfAdmin;
 		//static ULONG m_serviceType; // pm
 		static BOOL m_registry;
-		static BOOL m_preserveCase;
 		static BOOL m_bLoggedOn;
 
 	public:
@@ -56,6 +55,7 @@ namespace MAPIToolkit
 		static std::map<std::wstring, ULONG> g_saveConfigMap;
 		static std::map<std::wstring, std::wstring> g_parameterHelpInfo;
 		static std::map <std::wstring, std::wstring > g_parameterHelpValues;
+		static BOOL m_preserveCase;
 	public:
 		 static VOID Run(int argc, wchar_t* argv[]);
 		 static VOID CustomRun();

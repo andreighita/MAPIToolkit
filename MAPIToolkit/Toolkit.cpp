@@ -1127,7 +1127,6 @@ namespace MAPIToolkit
 				std::wstring wsArg = SubstringFromStart(1, argv[i]);
 				std::transform(wsArg.begin(), wsArg.end(), wsArg.begin(), ::tolower);
 
-
 				if (wsArg == L"preservecase")
 				{
 					m_preserveCase = TRUE;
@@ -1225,7 +1224,7 @@ namespace MAPIToolkit
 			case '/':
 			case '\\':
 				std::wstring wsArg = SubstringFromStart(1, argv[i]);
-				if (m_preserveCase != TRUE) std::transform(wsArg.begin(), wsArg.end(), wsArg.begin(), ::tolower);
+				std::transform(wsArg.begin(), wsArg.end(), wsArg.begin(), ::tolower);
 
 				try
 				{

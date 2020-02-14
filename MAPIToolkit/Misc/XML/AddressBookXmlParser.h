@@ -62,7 +62,10 @@ namespace MAPIToolkit
 
 				try
 				{
-					Toolkit::g_addressBookMap.at(StringToLower(bstrNodeName)) = StringToLower(bstrNodeText);
+					if (Toolkit::m_preserveCase == TRUE)
+						Toolkit::g_addressBookMap.at(StringToLower(bstrNodeName)) = bstrNodeText;
+					else
+						Toolkit::g_addressBookMap.at(StringToLower(bstrNodeName)) = StringToLower(bstrNodeText);
 				}
 				catch (const std::exception& e)
 				{
