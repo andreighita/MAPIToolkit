@@ -1,14 +1,8 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-
-/.vs/MapiToolkit/v16/Browse.VC.opendb
 *.exe
-Win32/Debug/*
-x64/Debug/*
-.vs/*
-Intermediate/*
-Win32/Debug/MAPIToolkit.lib
-Win32/Debug/MAPIToolkit.pdb
-x64/Debug/MAPIToolkit.lib
-x64/Debug/MAPIToolkit.pdb
+/Win32/*
+/x64/*
+/.vs/*
+/Intermediate/*
