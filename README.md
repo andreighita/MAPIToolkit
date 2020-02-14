@@ -20,6 +20,7 @@ Allow managing MAPI profile and running MAPI operations against mailobxes.
  [-newservername        <string>]
  [-newserverport        <int>]
  [-password             <string>]
+ [-preservecase]
  [-profilemode          {default, specific, all}]
  [-profilename          <string>]
  [-registry]
@@ -29,6 +30,7 @@ Allow managing MAPI profile and running MAPI operations against mailobxes.
  [-servername           <string>]
  [-serverport           <int>]
  [-servicetype          {addressbook}]
+ [-setsearchindex       {<int>}]
  [-username             <string>]
  [-usessl               {true, false}]
 ```
@@ -48,6 +50,7 @@ Allow managing MAPI profile and running MAPI operations against mailobxes.
  -newservername       : Server name to replace the current server name with in the speciifed service.
  -newserverport       : Server port to replace the current server port with in the speciifed service.
  -password            : The password to use for authenticating. This must be a clear text passord. It will be encrypted via CryptoAPI and stored in the address book settings.
+ -preservecase        : Indicates whether the string values passed for service or server names are to be processed as typed, preserving the case instead of transposing the values to lowercase.
  -profilemode         : Indicates whether to run the action on all profiles or a specific profile.
  -profilename         : Indicates the name of the profile to run the action against. If left empty, the default profile will be used, unles the profilemode specified is "all".
  -registry            : Indicates whether to read the configuration from the registry if previously saved with "-saveconfig true".
@@ -57,6 +60,7 @@ Allow managing MAPI profile and running MAPI operations against mailobxes.
  -servername          : The LDAP address book server address. For example "ldap.contoso.com".
  -serverport          : The LDAP port to connect to. The standard port for Active Directory is 389.
  -servicetype         : Indicates the type of service to run the action against.
+ -setsearchindex      : Sets the address book search order in Outlook as such as the address book being added is used based on the index specified. For example, for a value of 1, the new address book will be the first one in the search list.
  -username            : The Username to use for authenticating in the form of domain\username, UPN or just the username if domain name not applicable or not required. Leave blank if a username and password are not required.
  -usessl              : "true" if a SSL connection is required.The default value is "false".
  ```
